@@ -1,0 +1,89 @@
+footer{
+	position: absolute;
+	bottom:0;
+	height:50px;
+	width:100%;
+	padding-right:15px;
+	padding-left:15px;
+	margin-right: auto;
+	margin-left: auto;
+	box-sizing: border-box;
+}
+
+
+
+
+.main-block{
+	padding: 40px 15px;
+	text-align: center;
+}
+.navbar{
+	background: #ff261e; /* Old browsers */
+	background: -moz-linear-gradient(top, #ff261e 0%, #000000 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff261e), color-stop(100%,#000000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ff261e 0%,#000000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ff261e 0%,#000000 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ff261e 0%,#000000 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ff261e 0%,#000000 100%); /* W3C */
+}
+
+#brand{
+	color: white;
+	margin:0px;
+}
+
+
+
+
+@media screen and (min-width:768px){
+	body{
+		padding-top: 50px;
+	}
+
+	footer{
+		width:750px;
+	}
+
+	.navbar-header {
+		float: left;
+		text-align: center;
+		width: 100%;
+		margin:0px;
+		margin-top: 15px;
+	}
+	#brand {
+		float:none;
+		color: white;
+		margin:0px;
+		font-size:1.8em;
+	}
+}
+
+@media screen and (min-width: 992px){
+	body{
+		padding-top: 89px;
+	}
+	footer{
+		width:970px;
+	}
+}
+
+@media screen and (min-width: 1200px){
+	body{
+		padding-top: 89px;
+	}
+	footer{
+		width:1170px;
+	}
+}
+@media screen and (max-width:767px){
+	body{
+		padding-top: 50px;
+	}
+	footer{
+		width:100%;
+	}
+}
+
+
+
