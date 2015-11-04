@@ -15,10 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from ShotForTheHeart.views import hello, base
+import ShotForTheHeart.views as views;
 
 urlpatterns = [
+	url(r'^$', views.main),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^hello/$', hello),
-    url(r'^base/$', base),
+    url(r'^base/$', views.base),
+    url(r'^hello/$', views.hello),
+    url(r'^profile/$', views.profile),
+    
+    
 ]

@@ -1,22 +1,36 @@
+html {
+	height:100%;
+}
+body{
+	background-color:#eee;
+	height:100%;
+}
+
 footer{
-	position: absolute;
-	bottom:0;
+	background-color: #333;
+	position:relative;
+	bottom: 0;
 	height:50px;
 	width:100%;
-	padding-right:15px;
-	padding-left:15px;
-	margin-right: auto;
-	margin-left: auto;
+	margin: 0 auto;
 	box-sizing: border-box;
 }
 
-
-
+.container{
+	min-height: 100%;
+	height: auto !important; /* IE6 support */
+	height: 100%;
+	padding-bottom: 50px;
+	margin-bottom: -50px; /* the bottom margin is the negative value of the footer's height to allow for  positioning*/
+}
 
 .main-block{
+	height:100%;
 	padding: 40px 15px;
 	text-align: center;
+	font-size: 1.6em;
 }
+
 .navbar{
 	background: #ff261e; /* Old browsers */
 	background: -moz-linear-gradient(top, #ff261e 0%, #000000 100%); /* FF3.6+ */
@@ -32,16 +46,21 @@ footer{
 	margin:0px;
 }
 
+#footer_content{
+	padding-right:15px;
+	padding-left:15px;
+	margin:0 auto;
+	box-sizing: border-box;
+	color:white;
+	vertical-align: middle;
+
+}
 
 
 
 @media screen and (min-width:768px){
 	body{
-		padding-top: 50px;
-	}
-
-	footer{
-		width:750px;
+		padding-top: 89px;
 	}
 
 	.navbar-header {
@@ -57,22 +76,19 @@ footer{
 		margin:0px;
 		font-size:1.8em;
 	}
+	#footer_content{
+		width:750px;
+	}
 }
 
 @media screen and (min-width: 992px){
-	body{
-		padding-top: 89px;
-	}
-	footer{
+	#footer_content{
 		width:970px;
 	}
 }
 
 @media screen and (min-width: 1200px){
-	body{
-		padding-top: 89px;
-	}
-	footer{
+	#footer_content{
 		width:1170px;
 	}
 }
@@ -80,7 +96,7 @@ footer{
 	body{
 		padding-top: 50px;
 	}
-	footer{
+	#footer_content{
 		width:100%;
 	}
 }
