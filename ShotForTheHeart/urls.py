@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^base/$', views.base),
     url(r'^hello/$', views.hello),
     url(r'^profile/$', views.profile),
+    url(r'^target/$', views.target),
     
     
 ]

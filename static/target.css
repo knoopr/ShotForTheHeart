@@ -1,0 +1,14 @@
+/*#picture{
+	float:left;
+}*/
+
+.info-label {
+	font-weight:bold;
+}
+
+#information {
+	text-align: left;
+}
+#picture {
+	width:100%;
+}

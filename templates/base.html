@@ -45,7 +45,7 @@
       </div>
     </nav>
     <div class="main-block">
-        {% block content %}{% endblock %}
+      {% block content %}{% endblock %}
     </div>
   </div>
   <footer>
@@ -74,6 +74,9 @@
   </script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="../static/ie10-viewport-bug-workaround.js"></script>
-  
 
-</body></html>
+  <!-- Other Javascript for this page -->
+  {% block javascript %}{% endblock %}
+  
+</body>
+</html>

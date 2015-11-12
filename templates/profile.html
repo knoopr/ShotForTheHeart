@@ -4,34 +4,104 @@
 
 {% block styles %}
 <link href="../static/profile.css" rel="stylesheet">
+<link href="../static/darkroom.css" rel="stylesheet">
+
 {% endblock %}
 
 
 
 {% block content %}
-<div class="row-fluid">
+<input type="file" id="fileInput">
+<div id="profile-picture" >
+	<img id="file-display" src="">
+</div>
+
+<!-- <div class="row-fluid">
 	<div class="col-md-6">
-		<img id="picture" src="{{picture}}" alt ="Your target's photo">
+		<canvas id="cropper-image" style="visibility:hidden"></canvas>
+		<span id="upload-button" type="file" class="btn btn-primary btn-file">
+		Upload an Image!
+		<input type="file" id="upload" class="btn btn-primary"/>
+		<input type="file" id="imageLoader" name="imageLoader"/>
+		<canvas id="imageCanvas"></canvas>
 	</div>
 	<div class="col-md-6">
 		<div id="information">
 			<div class="row-fluid">
-				<div class="col-md-4"> Name: </div>
+				<div class="col-md-4 info-label"> Name: </div>
 				<div class="col-md-8"> {{target.name}} </div>
 			</div>
 			<div class="row-fluid">
-				<div class="col-md-4"> Program: </div>
+				<div class="col-md-4 info-label" > Program: </div>
 				<div class="col-md-8"> {{target.program}} </div>
 			</div>
 			<div class="row-fluid">
-				<div class="col-md-4"> Year: </div>
+				<div class="col-md-4 info-label"> Year: </div>
 				<div class="col-md-8"> {{target.year}} </div>
 			</div>
 			<div class="row-fluid">
-				<div class="col-md-4"> Hangout Spot: </div>
+				<div class="col-md-4 info-label"> Hangout Spot: </div>
 				<div class="col-md-8"> {{target.location}} </div>
 			</div>
 		</div>
 	</div>
-</div>
+</div> -->
+{% endblock %}
+
+
+{% block javascript %}
+<script type="text/javascript" src="../static/fabric.js"></script>
+<script type="text/javascript" src="../static/darkroom.js"></script>
+<script type="text/javascript">
+window.onload = function() {
+	//darkroom loads svg elements and makes them hidden
+	//var svg = document.getElementsByTagName("svg")[0].style.display = "none";
+
+	var fileInput = document.getElementById('fileInput');
+	var fileDisplay = document.getElementById('file-display');
+	var profileDiv = document.getElementById('profile-picture');
+
+
+	fileInput.addEventListener('change', function(e) {
+		var file = fileInput.files[0];
+		var imageType = /image.*/;
+
+		if (file.type.match(imageType)) {
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				console.log("test");
+				fileDisplay.src=reader.result;
+				var dkrm = new Darkroom('#file-display', {
+				      // Size options
+				      minWidth: 553,
+				      minHeight: 830,
+				      maxWidth: $("#profile-picture" ).width(),
+				      maxHeight: $("#profile-picture" ).height(),
+				      ratio: 1.6,
+				      backgroundColor: '#000',
+				      // Plugins options
+				      plugins: {
+				        //save: false,
+				        crop: {
+				          quickCropKey: 67, //key "c"
+				          //minHeight: 50,
+				          //minWidth: 50,
+				          //ratio: 4/3
+				        }
+				      },
+				      // Post initialize script
+				      initialize: function() {
+				      	console.log(profileDiv.style);
+				        var cropPlugin = this.plugins['crop'];
+				        // cropPlugin.selectZone(170, 25, 300, 300);
+				        cropPlugin.requireFocus();
+				      }
+				    });
+			}
+			reader.readAsDataURL(file);
+		}
+	});
+}
+</script>
 {% endblock %}

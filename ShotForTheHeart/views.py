@@ -14,7 +14,13 @@ def main(request):
 
 def profile(request):
 	template = get_template('profile.html')
-	html = template.render({'city': 'Guelph', 'active_tab': 'profile', 'picture': 'http://i.imgur.com/VBQgNPm.jpg', 'target' : target})
+	html = template.render({'city': 'Guelph', 'active_tab': 'profile'})
+	return HttpResponse(html);	
+
+def target(request):
+	template = get_template('target.html')
+	target = {'picture' : 'http://i.imgur.com/VBQgNPm.jpg', 'name':'Billy Generic', 'program' : 'Business', 'year': '5th', 'location' : 'Johnston'}
+	html = template.render({'city': 'Guelph', 'active_tab': 'target', 'target' : target})
 	return HttpResponse(html);	
 
 def base(request):

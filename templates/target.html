@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+
+
+{% block styles %}
+<link href="../static/target.css" rel="stylesheet">
+{% endblock %}
+
+
+
+{% block content %}
+<div class="row-fluid">
+	<div class="col-md-6">
+		<img id="picture" src="{{target.picture}}" alt ="Your target's photo">
+	</div>
+	<div class="col-md-6">
+		<div id="information">
+			<div class="row-fluid">
+				<div class="col-md-4 info-label"> Name: </div>
+				<div class="col-md-8"> {{target.name}} </div>
+			</div>
+			<div class="row-fluid">
+				<div class="col-md-4 info-label" > Program: </div>
+				<div class="col-md-8"> {{target.program}} </div>
+			</div>
+			<div class="row-fluid">
+				<div class="col-md-4 info-label"> Year: </div>
+				<div class="col-md-8"> {{target.year}} </div>
+			</div>
+			<div class="row-fluid">
+				<div class="col-md-4 info-label"> Hangout Spot: </div>
+				<div class="col-md-8"> {{target.location}} </div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

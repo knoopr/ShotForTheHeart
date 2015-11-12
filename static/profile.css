@@ -1,7 +1,39 @@
-/*#picture{
-	float:left;
-}*/
+.btn-file{
+	position: relative;
+	overflow:hidden;
+}
+.info-label {
+	font-weight:bold;
+}
 
 #information {
 	text-align: left;
+}
+
+#file-display{
+	display:block;
+	width:100%;
+	height:100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media screen and (min-width:768px){
+	#profile-picture {
+		width:720px;
+		height: 405px;
+	}
+}
+
+@media screen and (min-width:992px){
+	#profile-picture {
+		width:940px;
+		height:529px;
+	}
+}
+@media screen and (min-width:1200px){
+	#profile-picture {
+		width:1140px;
+		height:641px;
+	}
 }
