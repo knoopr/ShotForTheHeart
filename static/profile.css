@@ -18,22 +18,28 @@
 	margin-right: auto;
 }
 
+#profile-picture{
+    display:none;
+    margin-bottom:40px;
+}
+
 @media screen and (min-width:768px){
+    /*couldn't get this working*/
 	#profile-picture {
-		width:720px;
+		width:400px;
 		height: 405px;
 	}
 }
 
 @media screen and (min-width:992px){
 	#profile-picture {
-		width:940px;
-		height:529px;
+		width:425px;
+		height:637.5px;
 	}
 }
 @media screen and (min-width:1200px){
 	#profile-picture {
-		width:1140px;
-		height:641px;
+		width:525px;
+		height:787.5px;
 	}
 }

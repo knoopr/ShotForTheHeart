@@ -4,26 +4,20 @@
 
 {% block styles %}
 <link href="../static/profile.css" rel="stylesheet">
-<link href="../static/darkroom.css" rel="stylesheet">
+<link href="../static/croppic.css" rel="stylesheet">
 
 {% endblock %}
 
 
 
 {% block content %}
-<input type="file" id="fileInput">
-<div id="profile-picture" >
-	<img id="file-display" src="">
-</div>
 
-<!-- <div class="row-fluid">
+
+
+<div class="row-fluid">
 	<div class="col-md-6">
-		<canvas id="cropper-image" style="visibility:hidden"></canvas>
-		<span id="upload-button" type="file" class="btn btn-primary btn-file">
-		Upload an Image!
-		<input type="file" id="upload" class="btn btn-primary"/>
-		<input type="file" id="imageLoader" name="imageLoader"/>
-		<canvas id="imageCanvas"></canvas>
+        <span class="btn btn-success" id="cropContainerHeaderButton">click here to try it</span>
+        <div id="profile-picture" ></div>
 	</div>
 	<div class="col-md-6">
 		<div id="information">
@@ -45,63 +39,37 @@
 			</div>
 		</div>
 	</div>
-</div> -->
+</div>
 {% endblock %}
 
 
 {% block javascript %}
-<script type="text/javascript" src="../static/fabric.js"></script>
-<script type="text/javascript" src="../static/darkroom.js"></script>
+<script type="text/javascript" src="../static/croppic.min.js"></script>
 <script type="text/javascript">
-window.onload = function() {
-	//darkroom loads svg elements and makes them hidden
-	//var svg = document.getElementsByTagName("svg")[0].style.display = "none";
-
-	var fileInput = document.getElementById('fileInput');
-	var fileDisplay = document.getElementById('file-display');
-	var profileDiv = document.getElementById('profile-picture');
-
-
-	fileInput.addEventListener('change', function(e) {
-		var file = fileInput.files[0];
-		var imageType = /image.*/;
-
-		if (file.type.match(imageType)) {
-			var reader = new FileReader();
-
-			reader.onload = function(e) {
-				console.log("test");
-				fileDisplay.src=reader.result;
-				var dkrm = new Darkroom('#file-display', {
-				      // Size options
-				      minWidth: 553,
-				      minHeight: 830,
-				      maxWidth: $("#profile-picture" ).width(),
-				      maxHeight: $("#profile-picture" ).height(),
-				      ratio: 1.6,
-				      backgroundColor: '#000',
-				      // Plugins options
-				      plugins: {
-				        //save: false,
-				        crop: {
-				          quickCropKey: 67, //key "c"
-				          //minHeight: 50,
-				          //minWidth: 50,
-				          //ratio: 4/3
-				        }
-				      },
-				      // Post initialize script
-				      initialize: function() {
-				      	console.log(profileDiv.style);
-				        var cropPlugin = this.plugins['crop'];
-				        // cropPlugin.selectZone(170, 25, 300, 300);
-				        cropPlugin.requireFocus();
-				      }
-				    });
-			}
-			reader.readAsDataURL(file);
-		}
-	});
+	var croppicHeaderOptions = {
+		//uploadUrl:'img_save_to_file.php',
+		cropUrl:'img_crop_to_file.php',
+		customUploadButtonId:'cropContainerHeaderButton',
+		modal:false,
+		processInline:true,
+		imgEyecandy:false,
+		loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> ',
+		onBeforeImgUpload: function(){ console.log('onBeforeImgUpload') },
+		onAfterImgUpload: function(){
+		    $('#profile-picture').css("display","block");
+		    var width = $('#profile-picture').width();
+		    $('#profile-picture').height(width*1.5);
+		    console.log($('#profile-picture').css("height"));
+		    
+		},
+		onImgDrag: function(){ console.log('onImgDrag') },
+		onImgZoom: function(){ console.log('onImgZoom') },
+		onBeforeImgCrop: function(){ console.log('onBeforeImgCrop') },
+		onAfterImgCrop:function(){ console.log('onAfterImgCrop') },
+		onReset:function(){ console.log('onReset') },
+		onError:function(errormessage){ console.log('onError:'+errormessage) }
 }
+	var croppic = new Croppic('profile-picture', croppicHeaderOptions);
+
 </script>
 {% endblock %}
