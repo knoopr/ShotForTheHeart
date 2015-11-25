@@ -16,26 +16,37 @@
 
 <div class="row-fluid">
 	<div class="col-md-6">
-        <span class="btn btn-success" id="cropContainerHeaderButton">click here to try it</span>
-        <div id="profile-picture" ></div>
+        <span class="btn btn-success" id="uploadButton">click here to try it</span>
+        <div id="profilePicture"></div>
 	</div>
 	<div class="col-md-6">
 		<div id="information">
 			<div class="row-fluid">
 				<div class="col-md-4 info-label"> Name: </div>
-				<div class="col-md-8"> {{target.name}} </div>
+				<div class="col-md-8">
+				    <input class="form-control" id="inputName" type="text">
+				</div>
 			</div>
+			<br><br>
 			<div class="row-fluid">
 				<div class="col-md-4 info-label" > Program: </div>
-				<div class="col-md-8"> {{target.program}} </div>
+				<div class="col-md-8">
+				    <input class="form-control" id="inputProgram" type="text">
+				</div>
 			</div>
+			<br><br>
 			<div class="row-fluid">
 				<div class="col-md-4 info-label"> Year: </div>
-				<div class="col-md-8"> {{target.year}} </div>
+							<div class="col-md-8">
+				    <input class="form-control" id="inputYear" type="text">
+				</div>
 			</div>
+			<br><br>
 			<div class="row-fluid">
 				<div class="col-md-4 info-label"> Hangout Spot: </div>
-				<div class="col-md-8"> {{target.location}} </div>
+				<div class="col-md-8">
+				    <input class="form-control" id="inputHangout" type="text">
+				</div>
 			</div>
 		</div>
 	</div>
@@ -49,27 +60,29 @@
 	var croppicHeaderOptions = {
 		//uploadUrl:'img_save_to_file.php',
 		cropUrl:'img_crop_to_file.php',
-		customUploadButtonId:'cropContainerHeaderButton',
+		customUploadButtonId:'uploadButton',
 		modal:false,
 		processInline:true,
 		imgEyecandy:false,
 		loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> ',
 		onBeforeImgUpload: function(){ console.log('onBeforeImgUpload') },
 		onAfterImgUpload: function(){
-		    $('#profile-picture').css("display","block");
-		    var width = $('#profile-picture').width();
-		    $('#profile-picture').height(width*1.5);
-		    console.log($('#profile-picture').css("height"));
+		    var width = $('#profilePicture').width();
+		    $('#profilePicture').height(width*1.5);
+		    $('.cropImgWrapper').height(width*1.5);
+		    $('#profilePicture').css("display","block");
 		    
 		},
 		onImgDrag: function(){ console.log('onImgDrag') },
 		onImgZoom: function(){ console.log('onImgZoom') },
 		onBeforeImgCrop: function(){ console.log('onBeforeImgCrop') },
 		onAfterImgCrop:function(){ console.log('onAfterImgCrop') },
-		onReset:function(){ console.log('onReset') },
+		onReset:function(){
+		    $('#profilePicture').css("display","none");
+		},
 		onError:function(errormessage){ console.log('onError:'+errormessage) }
 }
-	var croppic = new Croppic('profile-picture', croppicHeaderOptions);
+	var croppic = new Croppic('profilePicture', croppicHeaderOptions);
 
 </script>
 {% endblock %}

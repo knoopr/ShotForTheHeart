@@ -18,27 +18,47 @@
 	margin-right: auto;
 }
 
-#profile-picture{
+#profilePicture{
     display:none;
-    margin-bottom:40px;
+    margin:0 auto 40px auto;
+}
+
+	/*#profilePicture {*/
+	/*    display:none;*/
+	/*}*/
+	/*#uploadButton{*/
+	/*    display:none;*/
+	/*}*/
+	/*#uploadWarning{*/
+	/*    display:block;*/
+	/*}*/
+
+
+@media screen and (max-width:768px){
+    /*couldn't get this working*/
+	#profilePicture {
+	    width: 100%;
+	    height: 720px;
+	    margin 0 auto;
+	}
 }
 
 @media screen and (min-width:768px){
-    /*couldn't get this working*/
-	#profile-picture {
-		width:400px;
-		height: 405px;
+    
+	#profilePicture {
+	    width: 400px;
+	    height: 600px;
 	}
 }
 
 @media screen and (min-width:992px){
-	#profile-picture {
+	#profilePicture {
 		width:425px;
 		height:637.5px;
 	}
 }
 @media screen and (min-width:1200px){
-	#profile-picture {
+	#profilePicture {
 		width:525px;
 		height:787.5px;
 	}
