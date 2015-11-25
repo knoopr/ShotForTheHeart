@@ -1,0 +1,59 @@
+<!--Copyright (C) 2015 Rick Knoop
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>-->
+
+
+
+{% extends 'base.html' %}
+
+{% block styles %}
+<link href="../static/login.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+	<div class="wrapper">
+		<h3 class="form-heading">Welcome Back! Please Sign In</h3>
+        <hr class="color-graph"><br>
+        <form action="" method="post" name="loginForm" class="form-signin" id="loginForm">
+            <input type="text" class="form-control" name="Email" placeholder="Email" id="loginEmail" required="" autofocus="" />
+            <input type="password" class="form-control" name="Password" placeholder="Password" id="loginPassword" required=""/>
+    			 
+            <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
+            <div>
+                <button id="login_lost_btn" type="button" class="btn btn-link">Lost Password?</button>
+                <button id="login_register_btn" type="button" class="btn btn-link" onclick="Register()">Register</button>
+            </div>
+		</form>
+		<form action="" method="post" name="RegisterForm" class="form-signin" id="registerForm">
+		    <input type="text" class="form-control" name="Name" placeholder="Full Name" id="fullName" required=""/>
+		    <input type="text" class="form-control middle-form" name="Email" placeholder="Email" required=""/>
+            <input type="password" class="form-control middle-form" name="Password" placeholder="Password" required=""/>
+            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required=""/>
+            
+            <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Register" type="Submit">Register</button>
+        </form>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    function Register(){
+        $('#loginForm').css("display","none");
+        $('#registerForm').css("display","block");
+        $('.form-heading').text("Welcome! Register Below");
+    }
+</script>
+
+{% endblock %}

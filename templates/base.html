@@ -1,3 +1,19 @@
+<!--Copyright (C) 2015 Rick Knoop
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/> -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +33,7 @@
 
   <!-- Custom style for this page -->
   {% block styles %}{% endblock %}
-
+  
 </head>
 <body>
   <div class="container">
@@ -37,9 +53,9 @@
           <ul class="nav navbar-nav">
             <li class="{% ifequal active_tab 'home' %} active {% endifequal %}"><a href="/">Home</a></li>
             <li class="{% ifequal active_tab 'profile' %} active {% endifequal %}"><a href="/profile">Me</a></li>
-            <li><a href="#target">Target</a></li>
+            <li class="{% ifequal active_tab 'target' %} active {% endifequal %}"><a href="/target">Target</a></li>
             <li><a href="#Fundraising">Fund raising</a></li>
-            <li><a href="#Login" style="Float:right">Login</a></li>
+            <li class="{% ifequal active_tab 'login' %} active {% endifequal %}"><a href="/login" >Login</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
