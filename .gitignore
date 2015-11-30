@@ -1,2 +1,5 @@
 #ignore collected static files
 static/admin/*
+
+#ignore database credentials
+ShotForTheHeart/dbCredentials

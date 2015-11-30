@@ -36,7 +36,6 @@ urlpatterns = [
 	url(r'^$', views.main),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^base/$', views.base),
-    url(r'^hello/$', views.hello),
     url(r'^login/$', views.login),
     url(r'^profile/$', views.profile),
     url(r'^target/$', views.target),

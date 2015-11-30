@@ -15,17 +15,14 @@
 
 from django.http import HttpResponse;
 from django.template.loader import get_template
-import datetime
-
-def hello(request):
-	now = datetime.datetime.now();
-	html = "<html><body>It is now %s.</body></html>" % now
-	return HttpResponse(html);
+from datetime import datetime
 
 def main(request):
 	template = get_template('main.html')
 	html = template.render({'city': 'Guelph', 'active_tab': 'home'})
-	return HttpResponse(html);
+	response = HttpResponse(html)
+	response.set_cookie('last_visit', datetime.datetime.now(), httponly=True)
+	return response
 
 def profile(request):
 	template = get_template('profile.html')

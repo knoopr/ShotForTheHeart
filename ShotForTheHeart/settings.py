@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from ast import literal_eval as eval
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -76,11 +77,23 @@ WSGI_APPLICATION = 'ShotForTheHeart.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+try:
+	file = open('/var/www/html/ShotForTheHeart/ShotForTheHeart/dbCredentials').read()
+	credentials = eval(file)
+except ImportError:
+	pass
+	
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    	'NAME': 'djangoSYSTEM',
+		'ENGINE': 'django.db.backends.mysql',
+    	'USER': credentials['username'],
+    	'PASSWORD': credentials['password'],
+	   	'HOST': '',
+	 	'PORT': '',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': 'db.sqlite3',
+	}
 }
 
 
