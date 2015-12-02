@@ -25,12 +25,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>-->
 {% block content %}
 	<div class="wrapper">
 		<h3 class="form-heading">Welcome Back! Please Sign In</h3>
-        <hr class="color-graph"><br>
-        <form action="" method="post" name="loginForm" class="form-signin" id="loginForm">
-            <input type="text" class="form-control" name="Email" placeholder="Email" id="loginEmail" required="" autofocus="" />
-            <input type="password" class="form-control" name="Password" placeholder="Password" id="loginPassword" required=""/>
+        <hr class="color-graph">
+        <div class="alert alert-danger" style="Display:{{display}}">
+   			Please enter a valid email and password!
+   		</div>
+        <br>
+        <form  method="post" name="loginForm" class="form-signin" id="loginForm">
+            {% csrf_token %}
+            <input type="text" class="form-control" name="Email" placeholder="Email" id="loginEmail" required="" {{email_field}} />
+        	<input type="password" class="form-control" name="Password" placeholder="Password" id="loginPassword" required="" {{pass_field}}/>
     			 
-            <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
+            <button class="btn btn-lg btn-primary btn-block"  name="Submit" value=":ogin" type="Submit">Login</button>
             <div>
                 <button id="login_lost_btn" type="button" class="btn btn-link">Lost Password?</button>
                 <button id="login_register_btn" type="button" class="btn btn-link" onclick="Register()">Register</button>

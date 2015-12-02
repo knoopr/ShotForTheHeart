@@ -41,6 +41,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> */
   background-color: #ff261e;
 }
 
+.alert{
+	font-size:.7em;
+}
+
 #loginEmail {
   margin-bottom: 0px;
   border-bottom-left-radius: 0;

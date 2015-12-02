@@ -15,14 +15,19 @@
 
 from django.http import HttpResponse;
 from django.template.loader import get_template
+from django.template.context_processors import csrf
 from datetime import datetime
+import ShotForTheHeart.model as model;
+
 
 def main(request):
 	template = get_template('main.html')
 	html = template.render({'city': 'Guelph', 'active_tab': 'home'})
-	response = HttpResponse(html)
+	request.session['hello'] = 'apple'
+	'''response = HttpResponse(html)
 	response.set_cookie('last_visit', datetime.datetime.now(), httponly=True)
-	return response
+	return response'''
+	return HttpResponse(html)
 
 def profile(request):
 	template = get_template('profile.html')
@@ -30,9 +35,38 @@ def profile(request):
 	return HttpResponse(html);
 	
 def login(request):
-	template = get_template('login.html')
-	html = template.render({'city': 'Guelph', 'active_tab': 'login'})
-	return HttpResponse(html);
+	# if request.method == 'GET':
+	# 	template = get_template('login.html')
+	# 	html = template.render({'city': 'Guelph', 'active_tab': 'login'})
+	# 	return HttpResponse(html);
+	# elif request.method == 'POST':
+	# 	return HttpResponse("Posted succesfully")
+	if request.method == 'GET':
+		template = get_template('login.html')
+		dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'none', 'email_field':'autofocus=""'}
+		dict.update(csrf(request))
+		html = template.render(dict)
+		return HttpResponse(html);
+	elif request.method == 'POST':
+		result = model.authorize(request)
+		#template = get_template('profile.html')
+		#return HttpResponse(template.render({'city':'Guelph', 'active_tab': 'profile'}))
+		if 'ERROR' in result:
+			dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'block'}
+			if result['ERROR'] != 'Empty Email':
+				email = request.POST.get('Email')
+				dict['email_field'] = 'value=%s' %(email)
+				dict['pass_field'] = 'autofocus=""'
+				dict['city'] = str(dict)
+			else:
+				dict['email_field'] = 'autofocus='
+			template = get_template('login.html')
+			dict.update(csrf(request))
+			html = template.render(dict)
+			return HttpResponse(html);
+		else:
+			return
+
 
 def target(request):
 	template = get_template('target.html')
