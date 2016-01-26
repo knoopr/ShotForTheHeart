@@ -24,21 +24,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>-->
 
 {% block content %}
 	<div class="wrapper">
-		<h3 class="form-heading">Welcome back! Please sign In</h3>
+		<h3 class="form-heading">Welcome! Please register below</h3>
         <hr class="color-graph">
         <div class="alert alert-danger" style="Display:{{display}}">
    			{{message}}
    		</div>
         <br>
-        <form  action ="./" method="post" name="loginForm" class="form-signin" id="loginForm">
-            {% csrf_token %}
-            <input type="text" class="form-control top-form" name="Email" placeholder="Email" required="" autofocus="" />
-        	<input type="password" class="form-control bottom-form" name="Password" placeholder="Password" required="" />
-            <button class="btn btn-lg btn-primary btn-block"  name="Login" value="Login" type="Submit">Login</button>
-            <div>
-                <button id="login_lost_btn" type="button" class="btn btn-link">Lost Password?</button>
-                <a href="/register" ><button id="login_register_btn" type="button" class="btn btn-link" >Register</button></a>
-            </div>
-		</form>
+		<form action="" method="post" name="RegisterForm" class="form-signin" id="registerForm">
+			{% csrf_token %}
+		    <input type="text" class="form-control top-form" name="Email" placeholder="Email" required=""/>
+            <input type="password" class="form-control middle-form" name="Password" placeholder="Password" required=""/>
+            <input type="password" class="form-control bottom-form" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" required=""/>
+            
+            <button class="btn btn-lg btn-primary btn-block"  name="Register" value="Register" type="Submit">Register</button>
+        </form>
 	</div>
 {% endblock %}

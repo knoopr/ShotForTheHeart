@@ -43,7 +43,7 @@ def login(request):
 	# 	return HttpResponse("Posted succesfully")
 	if request.method == 'GET':
 		template = get_template('login.html')
-		dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'none', 'email_field':'autofocus=""'}
+		dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'none'}
 		dict.update(csrf(request))
 		html = template.render(dict)
 		return HttpResponse(html);
@@ -52,21 +52,38 @@ def login(request):
 		#template = get_template('profile.html')
 		#return HttpResponse(template.render({'city':'Guelph', 'active_tab': 'profile'}))
 		if 'ERROR' in result:
-			dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'block'}
-			if result['ERROR'] != 'Empty Email':
-				email = request.POST.get('Email')
-				dict['email_field'] = 'value=%s' %(email)
-				dict['pass_field'] = 'autofocus=""'
-				dict['city'] = str(dict)
-			else:
-				dict['email_field'] = 'autofocus='
+			dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'block', 'message':'Please enter a valid email and password!'}
+			email = request.POST.get('Email')
+			dict['email_field'] = 'value=%s' %(email)
+			dict['pass_field'] = 'autofocus=""'
 			template = get_template('login.html')
 			dict.update(csrf(request))
 			html = template.render(dict)
-			return HttpResponse(html);
+			return HttpResponse(html)
 		else:
-			return
+			return profile(request)
 
+def register(request):
+	if request.method == 'GET':
+		template = get_template('register.html')
+		dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'none'}
+		dict.update(csrf(request))
+		html = template.render(dict)
+		return HttpResponse(html);
+	elif request.method == 'POST':
+		result = model.register(request)
+		if 'ERROR' in result:
+			dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'block', 'message':'Please enter a valid email and password!'}
+			email = request.POST.get('Email')
+			dict['email_field'] = 'value=%s' %(email)
+			dict['pass_field'] = 'autofocus=""'
+			template = get_template('register.html')
+			dict.update(csrf(request))
+			html = template.render(dict)
+			return HttpResponse(html)
+		else:
+			return profile(request)
+		
 
 def target(request):
 	template = get_template('target.html')

@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^base/$', views.base),
     url(r'^login/$', views.login),
     url(r'^profile/$', views.profile),
+    url(r'^register/$', views.register),
     url(r'^target/$', views.target),
     
     

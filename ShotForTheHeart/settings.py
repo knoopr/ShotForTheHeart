@@ -38,6 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ShotForTheHeart',
+    #'ShotForTheHeart.model.userInfo',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -96,6 +98,23 @@ DATABASES = {
 	}
 }
 
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 10,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -111,8 +130,11 @@ USE_L10N = True
 USE_TZ = True
 
 
+# User upload media files (photos of users)
+#MEDIA_ROOT = '/var/www/html/ShotForTheHeart/media
+#MEDIA_URL = '/media/'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_ROOT = '/var/www/html/ShotForTheHeart/static/'
 STATIC_URL = '/static/'
