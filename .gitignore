@@ -6,3 +6,6 @@ ShotForTheHeart/dbCredentials
 
 #ignoring /env and moving to installing using pip install -r requirements.txt
 env/
+
+#ignoring .pyc files
+*.pyc
