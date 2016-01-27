@@ -130,9 +130,12 @@ USE_L10N = True
 USE_TZ = True
 
 
+AUTH_USER_MODEL = 'ShotForTheHeart.CustomUser'
+
+
 # User upload media files (photos of users)
-#MEDIA_ROOT = '/var/www/html/ShotForTheHeart/media
-#MEDIA_URL = '/media/'
+MEDIA_ROOT = '/var/www/html/ShotForTheHeart/media'
+MEDIA_URL = '/media/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
