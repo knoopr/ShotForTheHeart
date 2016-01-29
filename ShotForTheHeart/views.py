@@ -17,7 +17,7 @@ from django.http import HttpResponse;
 from django.template.loader import get_template
 from django.template.context_processors import csrf
 from datetime import datetime
-import ShotForTheHeart.model as model;
+import ShotForTheHeart.models as models;
 
 
 def main(request):
@@ -48,7 +48,7 @@ def login(request):
 		html = template.render(dict)
 		return HttpResponse(html);
 	elif request.method == 'POST':
-		result = model.authorize(request)
+		result = models.authorize(request)
 		#template = get_template('profile.html')
 		#return HttpResponse(template.render({'city':'Guelph', 'active_tab': 'profile'}))
 		if 'ERROR' in result:
@@ -71,7 +71,7 @@ def register(request):
 		html = template.render(dict)
 		return HttpResponse(html);
 	elif request.method == 'POST':
-		result = model.register(request)
+		result = models.register(request)
 		if 'ERROR' in result:
 			dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'block', 'message':'Please enter a valid email and password!'}
 			email = request.POST.get('Email')
