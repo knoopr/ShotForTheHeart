@@ -9,3 +9,6 @@ env/
 
 #ignoring .pyc files
 *.pyc
+
+#ignoring migrations
+ShotForTheHeart/migrations
