@@ -52,10 +52,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="{% ifequal active_tab 'home' %} active {% endifequal %}"><a href="/">Home</a></li>
+            {% if user.is_authenticated %}
             <li class="{% ifequal active_tab 'profile' %} active {% endifequal %}"><a href="/profile">Me</a></li>
             <li class="{% ifequal active_tab 'target' %} active {% endifequal %}"><a href="/target">Target</a></li>
             <li><a href="#Fundraising">Fund raising</a></li>
+            <li class="{% ifequal active_tab 'logout' %} active {% endifequal %}"><a href="#logout" >Logout</a></li>
+            {% else %}
             <li class="{% ifequal active_tab 'login' %} active {% endifequal %}"><a href="/login" >Login</a></li>
+          	{% endif %}
+          	
           </ul>
         </div><!--/.nav-collapse -->
       </div>

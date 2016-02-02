@@ -13,25 +13,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from django.http import HttpResponse;
+from django.http import HttpResponse, HttpResponseRedirect;
 from django.template.loader import get_template
 from django.template.context_processors import csrf
 from datetime import datetime
 import ShotForTheHeart.models as models;
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
+
 
 
 def main(request):
 	template = get_template('main.html')
-	html = template.render({'city': 'Guelph', 'active_tab': 'home'})
-	request.session['hello'] = 'apple'
+	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'home'}))
+	#request.session['hello'] = 'apple'
 	'''response = HttpResponse(html)
 	response.set_cookie('last_visit', datetime.datetime.now(), httponly=True)
 	return response'''
 	return HttpResponse(html)
 
+@login_required
 def profile(request):
 	template = get_template('profile.html')
-	html = template.render({'city': 'Guelph', 'active_tab': 'profile'})
+	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'profile'}))
 	return HttpResponse(html);
 	
 def login(request):
@@ -43,9 +47,7 @@ def login(request):
 	# 	return HttpResponse("Posted succesfully")
 	if request.method == 'GET':
 		template = get_template('login.html')
-		dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'none'}
-		dict.update(csrf(request))
-		html = template.render(dict)
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'login', 'display':'none'}))
 		return HttpResponse(html);
 	elif request.method == 'POST':
 		result = models.authorize(request)
@@ -61,14 +63,12 @@ def login(request):
 			html = template.render(dict)
 			return HttpResponse(html)
 		else:
-			return profile(request)
+			return HttpResponseRedirect('/profile/')
 
 def register(request):
 	if request.method == 'GET':
 		template = get_template('register.html')
-		dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'none'}
-		dict.update(csrf(request))
-		html = template.render(dict)
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'login', 'display':'none'}))
 		return HttpResponse(html);
 	elif request.method == 'POST':
 		result = models.register(request)
@@ -88,7 +88,7 @@ def register(request):
 def target(request):
 	template = get_template('target.html')
 	target = {'picture' : 'http://i.imgur.com/VBQgNPm.jpg', 'name':'Billy Generic', 'program' : 'Business', 'year': '5th', 'location' : 'Johnston'}
-	html = template.render({'city': 'Guelph', 'active_tab': 'target', 'target' : target})
+	html = template.render(RequestContext(request,{'city': 'Guelph', 'active_tab': 'target', 'target' : target}))
 	return HttpResponse(html);
 
 def base(request):

@@ -131,6 +131,7 @@ USE_TZ = True
 
 
 AUTH_USER_MODEL = 'ShotForTheHeart.CustomUser'
+LOGIN_URL= '/login/'
 
 
 # User upload media files (photos of users)
