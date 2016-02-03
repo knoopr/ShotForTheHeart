@@ -13,14 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-from django.http import HttpResponse, HttpResponseRedirect;
+from django.contrib.auth import logout as Logout #wanted to keep naming convention for view functions
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template import RequestContext
 from django.template.loader import get_template
 from django.template.context_processors import csrf
 from datetime import datetime
-import ShotForTheHeart.models as models;
-from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
-
+import ShotForTheHeart.models as models
 
 
 def main(request):
@@ -32,11 +32,13 @@ def main(request):
 	return response'''
 	return HttpResponse(html)
 
+
 @login_required
 def profile(request):
 	template = get_template('profile.html')
 	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'profile'}))
 	return HttpResponse(html);
+
 	
 def login(request):
 	# if request.method == 'GET':
@@ -65,6 +67,12 @@ def login(request):
 		else:
 			return HttpResponseRedirect('/profile/')
 
+
+def logout(request):
+	Logout(request)
+	return HttpResponseRedirect('/')
+	
+	
 def register(request):
 	if request.method == 'GET':
 		template = get_template('register.html')
@@ -90,6 +98,14 @@ def target(request):
 	target = {'picture' : 'http://i.imgur.com/VBQgNPm.jpg', 'name':'Billy Generic', 'program' : 'Business', 'year': '5th', 'location' : 'Johnston'}
 	html = template.render(RequestContext(request,{'city': 'Guelph', 'active_tab': 'target', 'target' : target}))
 	return HttpResponse(html);
+
+
+def upload(request):
+	if request.method == 'POST':
+		return HttpResponse("temp")
+	else:
+		return HttpResponse(status=405)
+
 
 def base(request):
 	template = get_template('base.html')
