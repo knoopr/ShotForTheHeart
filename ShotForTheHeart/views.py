@@ -20,6 +20,7 @@ from django.template import RequestContext
 from django.template.loader import get_template
 from django.template.context_processors import csrf
 from datetime import datetime
+import ShotForTheHeart.models as models
 
 
 def main(request):

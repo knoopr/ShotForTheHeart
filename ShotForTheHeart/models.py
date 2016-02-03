@@ -1,7 +1,7 @@
+from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core import validators
 from django.db import models
-#from django.contrib.auth.models import User
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 import re
@@ -9,7 +9,7 @@ import re
 
 class UserManager (BaseUserManager):
 	def create_user(self,email,password=None):
-		user = self.model(email)
+		user = self.model(user_email = email)
 		user.set_password(password)
 		user.save()
 		return user
@@ -83,8 +83,15 @@ class CustomUser(AbstractBaseUser):
 def authorize(request):
 	email = request.POST.get('Email')
 	password = request.POST.get('Password')
-	if len(email) < 6 or len(password) < 8:
+	if len(email) < 6 or len(password) < 10:
 		return {'ERROR' : 'Too short'}
+	else:
+		user = authenticate(username = email, password = password)
+		if user is not None:
+			login(request,user)
+			return {'VALID' : 'Logged in succesfully'}
+		else:
+			return {'ERROR' : 'Username or password incorrect'}
 		
 def register(request):
 	email = request.POST.get('Email')
@@ -92,7 +99,6 @@ def register(request):
 	confirm = request.POST.get('confirmPassword')
 	if password != confirm:
 		return {'ERROR' : 'Unmatched Passwords'}
-	elif regex("[a-zA-Z0-9_\.\+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-\.]+", email) is None:
-		return {'ERROR' : 'Invalid Email'}
 	else:
+		user = CustomUser.objects.create_user(email=email, password=password)
 		return {'VALID' : 'GOOD'}
