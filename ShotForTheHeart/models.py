@@ -21,7 +21,6 @@ class UserManager (BaseUserManager):
 		return user()
 
 class CustomUser(AbstractBaseUser):
-	
 	class Meta:
 		app_label = 'ShotForTheHeart'
 		verbose_name = 'user'
