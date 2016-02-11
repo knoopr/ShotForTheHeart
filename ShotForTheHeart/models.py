@@ -4,6 +4,10 @@ from django.core import validators
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from hashlib import md5
+from io import BytesIO
+from PIL import Image
+import base64
 import re
 
 
@@ -37,7 +41,7 @@ class CustomUser(AbstractBaseUser):
 	study_program = models.CharField(max_length=50, blank=True)
 	study_year = models.PositiveSmallIntegerField(null=True, blank=True)
 	hangout_spot = models.CharField(max_length=50, blank=True)
-	profile_photo = models.ImageField(upload_to='tmp', blank=True)
+	profile_photo = models.ImageField(upload_to='./', blank=True)
 	#last_login = models.DateTimeField(null=True, blank=True)
 	user_eliminated = models.BooleanField(default=False)
 	target_id = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -77,6 +81,7 @@ class CustomUser(AbstractBaseUser):
 			self.save()
 			return True
 		return False
+		
 	
 	
 
@@ -102,3 +107,11 @@ def register(request):
 	else:
 		user = CustomUser.objects.create_user(email=email, password=password)
 		return {'VALID' : 'GOOD'}
+	
+		
+def CropImage(request):
+	img64 = request.POST.get('imgUrl')
+	img64 = img64[img64.find(',')+1:]
+	img = Image.open(BytesIO(base64.b64decode(img64)))
+	img.save("/var/www/html/ShotForTheHeart/media/tmp/" + md5(img.tobytes()).hexdigest()+ ".jpg")
+	return img64

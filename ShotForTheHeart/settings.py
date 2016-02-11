@@ -93,6 +93,7 @@ DATABASES = {
     	'PASSWORD': credentials['password'],
 	   	'HOST': '',
 	 	'PORT': '',
+	 	'CONN_MAX_AGE': 600
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': 'db.sqlite3',
 	}

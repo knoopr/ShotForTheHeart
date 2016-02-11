@@ -102,7 +102,7 @@ def target(request):
 
 def upload(request):
 	if request.method == 'POST':
-		return HttpResponse("temp")
+		return HttpResponse(models.CropImage(request))
 	else:
 		return HttpResponse(status=405)
 
