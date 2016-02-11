@@ -12,3 +12,7 @@ env/
 
 #ignoring migrations
 ShotForTheHeart/migrations
+
+#ignoring images files
+media
+
