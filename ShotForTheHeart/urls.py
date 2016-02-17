@@ -42,7 +42,6 @@ urlpatterns = [
     url(r'^register/$', views.register),
     url(r'^target/$', views.target),
     url(r'^upload/$', views.upload),
-    
-    
+    url(r'^media/tmp/.*$',views.tmpPic),
     
 ]

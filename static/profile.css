@@ -29,6 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> */
     /*border-width: 2px;*/
 }
 
+#pictureManagement{
+	margin:0 auto 40px auto;
+}
+
 #saveButton{
     float:right;
 }

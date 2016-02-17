@@ -27,9 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 
 {% block content %}
 <div class="row-fluid">
-	<div class="col-md-6">
-        <span class="btn btn-success" id="uploadButton">click here to try it</span>
+	<div id= "pictureManagement" class="col-md-6">
         <div id="profilePicture"></div>
+        <span class="btn btn-success" id="uploadButton">Upload an Image</span>
 	</div>
 	<div class="col-md-6">
 		<div id="information">
@@ -77,7 +77,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 <script type="text/javascript" src="../static/croppic.js"></script>
 <script type="text/javascript">
 	var croppicHeaderOptions = {
-		//uploadUrl:'img_save_to_file.php',
 		cropUrl:'../upload/',
 		cropData:{
 			"csrfmiddlewaretoken" : "{{csrf_token}}"
@@ -90,22 +89,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 		uploadData:{
 			"csrfmiddlewaretoken" : "{{csrf_token}}"
 		},
-		
-		onBeforeImgUpload: function(){
-			console.log('onBeforeImgUpload');
-		},
 		onAfterImgUpload: function(){
 		    var width = $('#profilePicture').width();
 		    $('#profilePicture').height(width*1.5);
 		    $('.cropImgWrapper').height(width*1.5);
 		    $('.cropImgWrapper').width(width);
 		    $('#profilePicture').css("display","block");
-		    
 		},
-		onImgDrag: function(){ console.log('onImgDrag') },
+		/*onImgDrag: function(){ console.log('onImgDrag') },
 		onImgZoom: function(){ console.log('onImgZoom') },
 		onBeforeImgCrop: function(){ console.log('onBeforeImgCrop') },
-		onAfterImgCrop:function(){ console.log('onAfterImgCrop') },
+		onAfterImgCrop:function(){ console.log('onAfterImgCrop') },*/
 		onReset:function(){
 		    $('#profilePicture').css("display","none");
 		},

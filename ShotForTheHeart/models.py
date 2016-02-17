@@ -108,10 +108,39 @@ def register(request):
 		user = CustomUser.objects.create_user(email=email, password=password)
 		return {'VALID' : 'GOOD'}
 	
+	
+class ImageProcessor:
+	def __init__(self,request):
+		img64 = request.POST.get('imgUrl')
+		img64 = img64[img64.find(',')+1:]
+		self.img = Image.open(BytesIO(base64.b64decode(img64)))
+		self.initDim = (int(request.POST.get('imgInitW')), int(request.POST.get('imgInitH')))
+		self.scaleDim = (int(float(request.POST.get('imgW'))), int(float(request.POST.get('imgH'))))
+		self.cropDim = (int(float(request.POST.get('cropW'))), int(float(request.POST.get('cropH'))))
+		self.corner = (int(float(request.POST.get('imgX1'))), int(float(request.POST.get('imgY1'))))
+		if '-' in request.POST.get("rotation"):
+			self.angle = 360 - int(request.POST.get("rotation"))
+		else:
+			self.angle = int(request.POST.get("rotation"))
 		
-def CropImage(request):
-	img64 = request.POST.get('imgUrl')
-	img64 = img64[img64.find(',')+1:]
-	img = Image.open(BytesIO(base64.b64decode(img64)))
-	img.save("/var/www/html/ShotForTheHeart/media/tmp/" + md5(img.tobytes()).hexdigest()+ ".jpg")
-	return img64
+
+	def CropImage(self):
+		self.img = self.img.resize(self.scaleDim, Image.LANCZOS)
+		self.img = self.img.rotate(self.angle)
+		self.img = self.img.crop((self.corner[0], self.corner[1] , 525 + self.corner[0], 787.5 + self.corner[1]))
+		
+		
+	def SaveImage(self):
+		filename = "/var/www/html/ShotForTheHeart/media/tmp/" + md5(self.img.tobytes()).hexdigest()+ ".jpg"
+		self.img.save(filename)
+		return '''{
+			"status" : "success",
+			"url" : "%s"
+		}''' %filename[29:]
+		
+	def LoadImage(self, path):
+		filename = "/var/www/html/ShotForTheHeart/" + path
+		return base64.b64encode(open(filename,"rb").read())
+		
+		
+		

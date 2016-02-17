@@ -21,6 +21,8 @@ from django.template.loader import get_template
 from django.template.context_processors import csrf
 from datetime import datetime
 import ShotForTheHeart.models as models
+from PIL import Image
+import base64
 
 
 def main(request):
@@ -72,7 +74,6 @@ def logout(request):
 	Logout(request)
 	return HttpResponseRedirect('/')
 	
-	
 def register(request):
 	if request.method == 'GET':
 		template = get_template('register.html')
@@ -102,10 +103,20 @@ def target(request):
 
 def upload(request):
 	if request.method == 'POST':
-		return HttpResponse(models.CropImage(request))
+		processor = models.ImageProcessor(request)
+		processor.CropImage()
+		return HttpResponse(processor.SaveImage())
 	else:
 		return HttpResponse(status=405)
 
+
+def tmpPic(request):
+	response = HttpResponse(content_type = "image/jpeg")
+	filename = "/var/www/html/ShotForTheHeart/" + request.path_info
+	img = Image.open(filename)
+	img.save(response,"JPEG")
+	return response
+	
 
 def base(request):
 	template = get_template('base.html')

@@ -117,7 +117,9 @@
 			
 			var cropControlUpload = '';
 			if(that.options.customUploadButtonId ===''){ cropControlUpload = '<i class="cropControlUpload"></i>'; }
-			var cropControlRemoveCroppedImage = '<i class="cropControlRemoveCroppedImage"></i>';
+			//var cropControlRemoveCroppedImage = '<i class="cropControlRemoveCroppedImage"></i>'; #wasn't displaying correctly so using custom upload as reset
+			
+			var cropControlRemoveCroppedImage = '';
 			
 			if( $.isEmptyObject(that.croppedImg)){ cropControlRemoveCroppedImage=''; }
 			if( !$.isEmptyObject(that.options.loadPicture)){ cropControlUpload='';}
@@ -140,7 +142,7 @@
 			var that = this;
 			
 			// CREATE UPLOAD IMG FORM
-            var formHtml = '<form class="' + that.id + '_imgUploadForm" style="visibility: hidden;">' + that.options.csrf + ' <input type="file" name="img" id="' + that.id + '_imgUploadField">  </form>';
+            var formHtml = '<form class="' + that.id + '_imgUploadForm" style="display:none;">' + that.options.csrf + ' <input type="file" name="img" id="' + that.id + '_imgUploadField">  </form>';
 			that.outputDiv.append(formHtml);
 			that.form = that.outputDiv.find('.'+that.id+'_imgUploadForm');
 			
