@@ -28,19 +28,22 @@ import base64
 def main(request):
 	template = get_template('main.html')
 	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'home'}))
-	#request.session['hello'] = 'apple'
-	'''response = HttpResponse(html)
-	response.set_cookie('last_visit', datetime.datetime.now(), httponly=True)
-	return response'''
 	return HttpResponse(html)
 
 
 @login_required
 def profile(request):
-	request.user.updateTime()
-	template = get_template('profile.html')
-	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'profile'}))
-	return HttpResponse(html);
+	if request.method == 'GET':
+		request.user.updateTime()
+		template = get_template('profile.html')
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'profile'}))
+		return HttpResponse(html);
+	if request.method == 'POST':
+		request.user.updateInfo(request.POST)
+		template = get_template('profile.html')
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'profile'}))
+		return HttpResponse(html);
+		
 
 	
 def login(request):

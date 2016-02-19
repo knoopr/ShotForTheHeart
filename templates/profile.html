@@ -42,39 +42,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 				<div class="row-fluid">
 					<div class="col-md-4 info-label"> Name: </div>
 					<div class="col-md-8">
-					    <input class="form-control" id="inputName" type="text" name="full_name" value="{{ request.user.full_name }}">
+					    <input class="form-control" id="inputName" type="text" name="full_name" value="{{ request.user.full_name|default:"" }}">
 					</div>
 				</div>
 				<br><br>
 				<div class="row-fluid">
 					<div class="col-md-4 info-label" > Program: </div>
 					<div class="col-md-8">
-					    <input class="form-control" id="inputProgram" type="text" name="study_program" value="{{ request.user.study_program }}">
+					    <input class="form-control" id="inputProgram" type="text" name="study_program" value="{{ request.user.study_program|default:"" }}">
 					</div>
 				</div>
 				<br><br>
 				<div class="row-fluid">
 					<div class="col-md-4 info-label"> Year: </div>
 					<div class="col-md-8">
-						<select class="form-control" id="inputYear" name="study_year" value="{{ request.user.study_year }}">
-							<option value="None"> Not selected </option>
-							<option value="1"> 1st </option>
-							<option value="2"> 2nd </option>
-							<option value="3"> 3rd </option>
-							<option value="4"> 4th </option>
-							<option value="5"> 5th </option>
-							<option value="6"> 6th </option>
-							<option value="7"> 7th </option>
-							<option value="8"> 8th </option>
+						{% comment %} Had to do comparison this way as the POST and GET don't do selected properly otherwise {% endcomment %}
+						<select class="form-control" id="inputYear" name="study_year">
+							<option value="0" {% if request.user.study_year == "0" or request.user.study_year == 0 %} selected="seleted" {% endif %}> Not selected </option>
+							<option value="1" {% if request.user.study_year == "1" or request.user.study_year == 1 %} selected="seleted" {% endif %}> 1st </option>
+							<option value="2" {% if request.user.study_year == "2" or request.user.study_year == 2 %} selected="seleted" {% endif %}> 2nd </option>
+							<option value="3" {% if request.user.study_year == "3" or request.user.study_year == 3 %} selected="seleted" {% endif %}> 3rd </option>
+							<option value="4" {% if request.user.study_year == "4" or request.user.study_year == 4 %} selected="seleted" {% endif %}> 4th </option>
+							<option value="5" {% if request.user.study_year == "5" or request.user.study_year == 5 %} selected="seleted" {% endif %}> 5th </option>
+							<option value="6" {% if request.user.study_year == "6" or request.user.study_year == 6 %} selected="seleted" {% endif %}> 6th </option>
+							<option value="7" {% if request.user.study_year == "7" or request.user.study_year == 7 %} selected="seleted" {% endif %}> 7th </option>
+							<option value="8" {% if request.user.study_year == "8" or request.user.study_year == 8 %} selected="seleted" {% endif %}> 8th </option>
 						</select>
-				    <!--<input class="form-control" id="inputYear" type="text" value="{{ request.user.study_year }}">-->
 					</div>
 				</div>
 				<br><br>
 				<div class="row-fluid">
 					<div class="col-md-4 info-label"> Hangout Spot: </div>
 					<div class="col-md-8">
-					    <input class="form-control" id="inputHangout" name="hangout_name" type="text" value="{{ request.user.hangout_spot }}">
+					    <input class="form-control" id="inputHangout" name="hangout_spot" type="text" value="{{ request.user.hangout_spot|default:"" }}">
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -116,8 +116,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 		},
 		/*onImgDrag: function(){ console.log('onImgDrag') },
 		onImgZoom: function(){ console.log('onImgZoom') },
-		onBeforeImgCrop: function(){ console.log('onBeforeImgCrop') },
-		onAfterImgCrop:function(){ console.log('onAfterImgCrop') },*/
+		onBeforeImgCrop: function(){ console.log('onBeforeImgCrop') },*/
+		onAfterImgCrop:function(){ console.log(location.reload()) },
 		onReset:function(){
 		    $('#profilePicture').css("display","none");
 		},

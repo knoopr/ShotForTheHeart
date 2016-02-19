@@ -40,7 +40,7 @@ class CustomUser(AbstractBaseUser):
 			])
 	full_name = models.CharField(max_length=126, blank=True)
 	study_program = models.CharField(max_length=50, blank=True)
-	study_year = models.PositiveSmallIntegerField(null=True, blank=True)
+	study_year = models.PositiveSmallIntegerField(default=0)
 	hangout_spot = models.CharField(max_length=50, blank=True)
 	profile_photo = models.ImageField(upload_to='./', blank=True)
 	#last_login = models.DateTimeField(null=True, blank=True)
@@ -65,6 +65,14 @@ class CustomUser(AbstractBaseUser):
 	def updateTime(self):
 		self.last_login = datetime.now()
 		self.save(update_fields=['last_login'])
+		
+	def updateInfo(self, POST):
+		self.full_name = POST.get('full_name')
+		self.study_program = POST.get('study_program')
+		self.study_year = POST.get('study_year')
+		self.hangout_spot = POST.get('hangout_spot')
+		self.save()
+		
 	
 	# def ChangeProgram(self, program_post):
 	# 	if len(program_post) < 50:
