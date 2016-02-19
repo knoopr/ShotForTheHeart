@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> */
 #profilePicture{
     display:none;
     margin:0 auto 40px auto;
+    background-color: black;
     /*border-style: solid;*/
     /*border-color: gray;*/
     /*border-width: 2px;*/

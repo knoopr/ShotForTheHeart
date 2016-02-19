@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core import validators
@@ -60,27 +61,31 @@ class CustomUser(AbstractBaseUser):
 	
 	def get_short_name(self):
 		return self.full_name
+		
+	def updateTime(self):
+		self.last_login = datetime.now()
+		self.save(update_fields=['last_login'])
 	
-	def ChangeProgram(self, program_post):
-		if len(program_post) < 50:
-			self.study_program = program_post
-			self.save()
-			return True
-		return False
+	# def ChangeProgram(self, program_post):
+	# 	if len(program_post) < 50:
+	# 		self.study_program = program_post
+	# 		self.save()
+	# 		return True
+	# 	return False
 			
-	def ChangeYear(self, year_post):
-		if year_post is not None and year_post.isdigit():
-			self.study_year = int(year_post)
-			self.save()
-			return True
-		return False
+	# def ChangeYear(self, year_post):
+	# 	if year_post is not None and year_post.isdigit():
+	# 		self.study_year = int(year_post)
+	# 		self.save()
+	# 		return True
+	# 	return False
 	
-	def ChangeHangout(self, hangout_post):
-		if len(hangout_post) < 50:
-			self.study_hangout = hanout_post
-			self.save()
-			return True
-		return False
+	# def ChangeHangout(self, hangout_post):
+	# 	if len(hangout_post) < 50:
+	# 		self.study_hangout = hanout_post
+	# 		self.save()
+	# 		return True
+	# 	return False
 		
 	
 	
@@ -118,25 +123,28 @@ class ImageProcessor:
 		self.scaleDim = (int(float(request.POST.get('imgW'))), int(float(request.POST.get('imgH'))))
 		self.cropDim = (int(float(request.POST.get('cropW'))), int(float(request.POST.get('cropH'))))
 		self.corner = (int(float(request.POST.get('imgX1'))), int(float(request.POST.get('imgY1'))))
+		self.rotation = request.POST.get("rotation")
 		if '-' in request.POST.get("rotation"):
-			self.angle = 360 - int(request.POST.get("rotation"))
+			self.angle = int(request.POST.get("rotation")[1:])
 		else:
-			self.angle = int(request.POST.get("rotation"))
+			self.angle = 360 - int(request.POST.get("rotation"))#rotation in pil is counterclockwise
 		
 
 	def CropImage(self):
 		self.img = self.img.resize(self.scaleDim, Image.LANCZOS)
 		self.img = self.img.rotate(self.angle)
-		self.img = self.img.crop((self.corner[0], self.corner[1] , 525 + self.corner[0], 787.5 + self.corner[1]))
+		self.img = self.img.crop((self.corner[0], self.corner[1] , self.cropDim[0] + self.corner[0], self.cropDim[1] + self.corner[1]))
 		
 		
-	def SaveImage(self):
-		filename = "/var/www/html/ShotForTheHeart/media/tmp/" + md5(self.img.tobytes()).hexdigest()+ ".jpg"
+	def SaveImage(self, user):
+		filename = "/var/www/html/ShotForTheHeart/media/" + md5(user.user_email).hexdigest()+ ".jpg"
 		self.img.save(filename)
+		user.profile_photo = md5(user.user_email).hexdigest() + ".jpg"
+		user.save()
 		return '''{
 			"status" : "success",
 			"url" : "%s"
-		}''' %filename[29:]
+		}''' % filename[29:]
 		
 	def LoadImage(self, path):
 		filename = "/var/www/html/ShotForTheHeart/" + path

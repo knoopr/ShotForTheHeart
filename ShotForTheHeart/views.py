@@ -37,6 +37,7 @@ def main(request):
 
 @login_required
 def profile(request):
+	request.user.updateTime()
 	template = get_template('profile.html')
 	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'profile'}))
 	return HttpResponse(html);
@@ -74,6 +75,15 @@ def logout(request):
 	Logout(request)
 	return HttpResponseRedirect('/')
 	
+	
+def picture(request):
+	response = HttpResponse(content_type = "image/jpeg")
+	filename = "/var/www/html/ShotForTheHeart/" + request.path_info
+	img = Image.open(filename)
+	img.save(response,"JPEG")
+	return response
+
+	
 def register(request):
 	if request.method == 'GET':
 		template = get_template('register.html')
@@ -105,17 +115,10 @@ def upload(request):
 	if request.method == 'POST':
 		processor = models.ImageProcessor(request)
 		processor.CropImage()
-		return HttpResponse(processor.SaveImage())
+		return HttpResponse(processor.SaveImage(request.user))
 	else:
 		return HttpResponse(status=405)
 
-
-def tmpPic(request):
-	response = HttpResponse(content_type = "image/jpeg")
-	filename = "/var/www/html/ShotForTheHeart/" + request.path_info
-	img = Image.open(filename)
-	img.save(response,"JPEG")
-	return response
 	
 
 def base(request):

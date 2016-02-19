@@ -28,44 +28,62 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 {% block content %}
 <div class="row-fluid">
 	<div id= "pictureManagement" class="col-md-6">
-        <div id="profilePicture"></div>
+        <div id="profilePicture" {% if request.user.profile_photo != None %} style="display:block;" {% endif %}>
+	        {% if request.user.profile_photo != None %}
+	        	<img src="/media/{{request.user.profile_photo}}"/>
+	        {% endif %}
+        </div>
         <span class="btn btn-success" id="uploadButton">Upload an Image</span>
 	</div>
 	<div class="col-md-6">
-		<div id="information">
-			<div class="row-fluid">
-				<div class="col-md-4 info-label"> Name: </div>
-				<div class="col-md-8">
-				    <input class="form-control" id="inputName" type="text">
+		<form role="form" action="/profile/" method="post">
+			{% csrf_token %}
+			<div id="information">
+				<div class="row-fluid">
+					<div class="col-md-4 info-label"> Name: </div>
+					<div class="col-md-8">
+					    <input class="form-control" id="inputName" type="text" name="full_name" value="{{ request.user.full_name }}">
+					</div>
+				</div>
+				<br><br>
+				<div class="row-fluid">
+					<div class="col-md-4 info-label" > Program: </div>
+					<div class="col-md-8">
+					    <input class="form-control" id="inputProgram" type="text" name="study_program" value="{{ request.user.study_program }}">
+					</div>
+				</div>
+				<br><br>
+				<div class="row-fluid">
+					<div class="col-md-4 info-label"> Year: </div>
+					<div class="col-md-8">
+						<select class="form-control" id="inputYear" name="study_year" value="{{ request.user.study_year }}">
+							<option value="None"> Not selected </option>
+							<option value="1"> 1st </option>
+							<option value="2"> 2nd </option>
+							<option value="3"> 3rd </option>
+							<option value="4"> 4th </option>
+							<option value="5"> 5th </option>
+							<option value="6"> 6th </option>
+							<option value="7"> 7th </option>
+							<option value="8"> 8th </option>
+						</select>
+				    <!--<input class="form-control" id="inputYear" type="text" value="{{ request.user.study_year }}">-->
+					</div>
+				</div>
+				<br><br>
+				<div class="row-fluid">
+					<div class="col-md-4 info-label"> Hangout Spot: </div>
+					<div class="col-md-8">
+					    <input class="form-control" id="inputHangout" name="hangout_name" type="text" value="{{ request.user.hangout_spot }}">
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="col-md-12">
+					    <button type="submit" class="btn btn-success" id="saveButton">Save profile!</button>
+					</div>
 				</div>
 			</div>
-			<br><br>
-			<div class="row-fluid">
-				<div class="col-md-4 info-label" > Program: </div>
-				<div class="col-md-8">
-				    <input class="form-control" id="inputProgram" type="text">
-				</div>
-			</div>
-			<br><br>
-			<div class="row-fluid">
-				<div class="col-md-4 info-label"> Year: </div>
-							<div class="col-md-8">
-				    <input class="form-control" id="inputYear" type="text">
-				</div>
-			</div>
-			<br><br>
-			<div class="row-fluid">
-				<div class="col-md-4 info-label"> Hangout Spot: </div>
-				<div class="col-md-8">
-				    <input class="form-control" id="inputHangout" type="text">
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="col-md-12">
-				    <button type="submit" class="btn btn-success" id="saveButton">Save profile!</button>
-				</div>
-			</div>
-		</div>
+			</form>
 		<br><br>
 		
 	</div>

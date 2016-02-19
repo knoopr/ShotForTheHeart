@@ -142,7 +142,7 @@
 			var that = this;
 			
 			// CREATE UPLOAD IMG FORM
-            var formHtml = '<form class="' + that.id + '_imgUploadForm" style="display:none;">' + that.options.csrf + ' <input type="file" name="img" id="' + that.id + '_imgUploadField">  </form>';
+            var formHtml = '<form class="' + that.id + '_imgUploadForm" style="display:none;">' + that.options.csrf + ' <input type="file" name="img" accept="image/*" id="' + that.id + '_imgUploadField">  </form>';
 			that.outputDiv.append(formHtml);
 			that.form = that.outputDiv.find('.'+that.id+'_imgUploadForm');
 			
