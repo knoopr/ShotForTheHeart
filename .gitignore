@@ -2,7 +2,7 @@
 static/admin/*
 
 #ignore database credentials
-ShotForTheHeart/dbCredentials
+ShotForTheHeart/Credentials
 
 #ignoring /env and moving to installing using pip install -r requirements.txt
 env/

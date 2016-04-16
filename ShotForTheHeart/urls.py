@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^media/.*$',views.picture),
     url(r'^profile/$', views.profile),
     url(r'^register/$', views.register),
+    url(r'^register/.+', views.activate),
     url(r'^target/$', views.target),
     url(r'^upload/$', views.upload),
 ]

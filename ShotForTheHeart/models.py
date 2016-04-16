@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from hashlib import md5
 from io import BytesIO
+from mailin import Mailin
 from PIL import Image
 import base64
 import re
@@ -160,3 +161,7 @@ class ImageProcessor:
 		
 		
 		
+def Send_registration_email(emailAddress):
+	file = open('/var/www/html/ShotForTheHeart/ShotForTheHeart/Credentials').read()
+	credentials = eval(file)
+	mailSystem = Mailin("https://api.sendinblue.com/v2.0", credentials['email'])

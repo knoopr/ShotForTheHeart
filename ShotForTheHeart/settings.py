@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'ShotForTheHeart.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 try:
-	file = open('/var/www/html/ShotForTheHeart/ShotForTheHeart/dbCredentials').read()
+	file = open('/var/www/html/ShotForTheHeart/ShotForTheHeart/Credentials').read()
 	credentials = eval(file)
 except ImportError:
 	pass
@@ -89,8 +89,8 @@ DATABASES = {
     'default': {
     	'NAME': 'djangoSYSTEM',
 		'ENGINE': 'django.db.backends.mysql',
-    	'USER': credentials['username'],
-    	'PASSWORD': credentials['password'],
+    	'USER': credentials['db']['username'],
+    	'PASSWORD': credentials['db']['password'],
 	   	'HOST': '',
 	 	'PORT': '',
 	 	'CONN_MAX_AGE': 600

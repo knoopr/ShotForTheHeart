@@ -17,7 +17,7 @@ from django.contrib.auth import logout as Logout #wanted to keep naming conventi
 #from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.template.context_processors import csrf
@@ -25,6 +25,7 @@ from datetime import datetime
 import ShotForTheHeart.models as models
 from PIL import Image
 import base64
+from re import match
 
 
 def main(request):
@@ -132,3 +133,9 @@ def base(request):
 	html = template.render({'city': 'Guelph'})
 	return HttpResponse(html);
 
+def activate(request):
+	strMatch = match('\/register\/(.*)$', request.path);
+	if strMatch and '/' not in strMatch.group(1):
+		return HttpResponse('It works! Your url is: ' + strMatch.group(1));
+        else:
+		return HttpResponseBadRequest('You appear to have been directed to this page in error');
