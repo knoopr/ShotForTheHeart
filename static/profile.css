@@ -21,6 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> */
 	text-align: left;
 }
 
+.clearfix{
+	margin: 0 auto 20px auto;
+}
+
 #profilePicture{
     display:none;
     margin:0 auto 40px auto;
@@ -28,6 +32,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> */
     /*border-style: solid;*/
     /*border-color: gray;*/
     /*border-width: 2px;*/
+}
+
+#profilePicture img{
+    width:inherit;
+    height:inherit;
 }
 
 #pictureManagement{
@@ -43,7 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> */
 	    width: 100%;
 	    height: auto;
 	    /*height: 720px;*/
-	    margin: 0 auto;
+	    /*margin: 0 auto;*/
 	}
 }
 
