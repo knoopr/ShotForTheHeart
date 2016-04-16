@@ -14,6 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 from django.contrib.auth import logout as Logout #wanted to keep naming convention for view functions
+#from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
@@ -36,7 +38,7 @@ def profile(request):
 	if request.method == 'GET':
 		request.user.updateTime()
 		template = get_template('profile.html')
-		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'profile'}))
+		html = template.render(RequestContext(request, {'city': request.user.target_id, 'active_tab': 'profile'}))
 		return HttpResponse(html);
 	if request.method == 'POST':
 		request.user.updateInfo(request.POST)
@@ -108,8 +110,9 @@ def register(request):
 		
 
 def target(request):
+	target_User = models.CustomUser.objects.get(id=request.user.target_id);
 	template = get_template('target.html')
-	target = {'picture' : 'http://i.imgur.com/VBQgNPm.jpg', 'name':'Billy Generic', 'program' : 'Business', 'year': '5th', 'location' : 'Johnston'}
+	target = {'picture' : target_User.profile_photo, 'name':target_User.full_name, 'program' : target_User.study_program, 'year': target_User.study_year, 'location' : target_User.hangout_spot}
 	html = template.render(RequestContext(request,{'city': 'Guelph', 'active_tab': 'target', 'target' : target}))
 	return HttpResponse(html);
 

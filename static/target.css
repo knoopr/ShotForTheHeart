@@ -22,4 +22,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> */
 }
 #picture {
 	width:100%;
+	margin: 0 auto 40px auto;
 }
