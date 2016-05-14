@@ -165,3 +165,10 @@ def Send_registration_email(emailAddress):
 	file = open('/var/www/html/ShotForTheHeart/ShotForTheHeart/Credentials').read()
 	credentials = eval(file)
 	mailSystem = Mailin("https://api.sendinblue.com/v2.0", credentials['email'])
+	message = {
+		'to' : {'knoop.rick@gmail.com':'Rick Knoop'},
+		'from' : {'registrar@shotfortheheart.ca' : 'Shot for the heart Guelph'},
+		'subject' : 'Test Email',
+		'html' : 'Test email, it <h1> works! </h1>',
+	}
+	return mailSystem.send_email(message)['code']

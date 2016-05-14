@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>-->
    			{{message}}
    		</div>
         <br>
-        <form  action ="./" method="post" name="loginForm" class="form-signin" id="loginForm">
+        <form  action ="{{request.get_full_path}}" method="post" name="loginForm" class="form-signin" id="loginForm">
             {% csrf_token %}
             <input type="text" class="form-control top-form" name="Email" placeholder="Email" required="" autofocus="" />
         	<input type="password" class="form-control bottom-form" name="Password" placeholder="Password" required="" />

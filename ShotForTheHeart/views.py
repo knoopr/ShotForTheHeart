@@ -30,8 +30,15 @@ from re import match
 
 def main(request):
 	template = get_template('main.html')
-	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'home'}))
+	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Home'}))
 	return HttpResponse(html)
+
+
+def fundraising(request):
+	template = get_template('fundraising.html')
+	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Fundraising'}))
+	return HttpResponse(html)
+
 
 
 @login_required
@@ -39,12 +46,12 @@ def profile(request):
 	if request.method == 'GET':
 		request.user.updateTime()
 		template = get_template('profile.html')
-		html = template.render(RequestContext(request, {'city': request.user.target_id, 'active_tab': 'profile'}))
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Profile'}))
 		return HttpResponse(html);
 	if request.method == 'POST':
 		request.user.updateInfo(request.POST)
 		template = get_template('profile.html')
-		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'profile'}))
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Profile'}))
 		return HttpResponse(html);
 		
 
@@ -58,14 +65,14 @@ def login(request):
 	# 	return HttpResponse("Posted succesfully")
 	if request.method == 'GET':
 		template = get_template('login.html')
-		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'login', 'display':'none'}))
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login', 'display':'none'}))
 		return HttpResponse(html);
 	elif request.method == 'POST':
 		result = models.authorize(request)
 		#template = get_template('profile.html')
 		#return HttpResponse(template.render({'city':'Guelph', 'active_tab': 'profile'}))
 		if 'ERROR' in result:
-			dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'block', 'message':'Please enter a valid email and password!'}
+			dict = {'city': 'Guelph', 'active_tab': 'Login', 'display':'block', 'message':'Please enter a valid email and password!'}
 			email = request.POST.get('Email')
 			dict['email_field'] = 'value=%s' %(email)
 			dict['pass_field'] = 'autofocus=""'
@@ -74,7 +81,13 @@ def login(request):
 			html = template.render(dict)
 			return HttpResponse(html)
 		else:
-			return HttpResponseRedirect('/profile/')
+			nextPage = request.get_full_path
+			return HttpResponse(nextPage)
+			if nextPage == None:
+				return HttpResponse(nextPage)
+				return HttpResponseRedirect('/profile/')
+			else:
+				return HttpResponseRedirect(nextPage)
 
 
 def logout(request):
@@ -93,12 +106,12 @@ def picture(request):
 def register(request):
 	if request.method == 'GET':
 		template = get_template('register.html')
-		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'login', 'display':'none'}))
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login', 'display':'none'}))
 		return HttpResponse(html);
 	elif request.method == 'POST':
 		result = models.register(request)
 		if 'ERROR' in result:
-			dict = {'city': 'Guelph', 'active_tab': 'login', 'display':'block', 'message':'Please enter a valid email and password!'}
+			dict = {'city': 'Guelph', 'active_tab': 'Login', 'display':'block', 'message':'Please enter a valid email and password!'}
 			email = request.POST.get('Email')
 			dict['email_field'] = 'value=%s' %(email)
 			dict['pass_field'] = 'autofocus=""'
@@ -109,12 +122,12 @@ def register(request):
 		else:
 			return profile(request)
 		
-
+@login_required
 def target(request):
 	target_User = models.CustomUser.objects.get(id=request.user.target_id);
 	template = get_template('target.html')
 	target = {'picture' : target_User.profile_photo, 'name':target_User.full_name, 'program' : target_User.study_program, 'year': target_User.study_year, 'location' : target_User.hangout_spot}
-	html = template.render(RequestContext(request,{'city': 'Guelph', 'active_tab': 'target', 'target' : target}))
+	html = template.render(RequestContext(request,{'city': 'Guelph', 'active_tab': 'Target', 'target' : target}))
 	return HttpResponse(html);
 
 
@@ -136,6 +149,7 @@ def base(request):
 def activate(request):
 	strMatch = match('\/register\/(.*)$', request.path);
 	if strMatch and '/' not in strMatch.group(1):
+		return HttpResponse(models.Send_registration_email('knoop.rick@gmail.com'))
 		return HttpResponse('It works! Your url is: ' + strMatch.group(1));
         else:
 		return HttpResponseBadRequest('You appear to have been directed to this page in error');

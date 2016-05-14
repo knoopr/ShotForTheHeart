@@ -36,6 +36,7 @@ urlpatterns = [
 	url(r'^$', views.main),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^base/$', views.base),
+    url(r'^fundraising/$',views.fundraising),
     url(r'^login/$', views.login),
     url(r'^logout/$', views.logout),
     url(r'^media/.*$',views.picture),

@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Shot For The Heart {{city}} - {{page}} </title>
+  <title>Shot For The Heart {{city}} - {{active_tab}} </title>
 
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
@@ -51,14 +51,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="{% ifequal active_tab 'home' %} active {% endifequal %}"><a href="/">Home</a></li>
+            <li class="{% ifequal active_tab 'Home' %} active {% endifequal %}"><a href="/">Home</a></li>
             {% if user.is_authenticated %}
-            <li class="{% ifequal active_tab 'profile' %} active {% endifequal %}"><a href="/profile">Me</a></li>
-            <li class="{% ifequal active_tab 'target' %} active {% endifequal %}"><a href="/target">Target</a></li>
-            <li><a href="#Fundraising">Fund raising</a></li>
+            <li class="{% ifequal active_tab 'Profile' %} active {% endifequal %}"><a href="/profile">Me</a></li>
+            <li class="{% ifequal active_tab 'Target' %} active {% endifequal %}"><a href="/target">Target</a></li>
+            <li class="{% ifequal active_tab 'Fundraising' %} active {% endifequal %}"><a href=/fundraising>Fund raising</a></li>
             <li><a href="/logout" >Logout</a></li>
             {% else %}
-            <li class="{% ifequal active_tab 'login' %} active {% endifequal %}"><a href="/login" >Login</a></li>
+            <li class="{% ifequal active_tab 'Login' %} active {% endifequal %}"><a href="/login" >Login</a></li>
           	{% endif %}
           	
           </ul>
