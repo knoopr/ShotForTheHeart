@@ -116,7 +116,8 @@ def register(request):
 			html = template.render(dict)
 			return HttpResponse(html)
 		else:
-			return HttpResponseRedirect('/profile/?last=/register/')
+			#new_user = models.CustomUser.objects.get(id=request.user.target_id)
+			return HttpResponseRedirect('/login/?last=/register/')
 		
 @login_required
 def target(request):

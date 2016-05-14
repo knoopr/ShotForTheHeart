@@ -5,7 +5,7 @@ from django.core import validators
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from hashlib import md5
+import hashlib
 from io import BytesIO
 from mailin import Mailin
 from PIL import Image
@@ -19,6 +19,8 @@ class UserManager (BaseUserManager):
 		try:
 			user = self.model(user_email = email)
 			user.set_password(password)
+			email_hash = hashlib.sha256(email)
+			user.set_url(email_hash.hexdigest())
 			user.save()
 			return {'VALID': user}
 		except:
@@ -52,6 +54,7 @@ class CustomUser(AbstractBaseUser):
 	#last_login = models.DateTimeField(null=True, blank=True)
 	user_eliminated = models.BooleanField(default=False)
 	target_id = models.PositiveSmallIntegerField(null=True, blank=True)
+	activation_url = models.CharField(max_length=126, blank=True)
 	
 	#Required Fields
 	is_staff = models.BooleanField(_('staff status'), default=False, help_text = ("Designates whether the user can login to the admin site"))
@@ -61,6 +64,10 @@ class CustomUser(AbstractBaseUser):
 
 	USERNAME_FIELD = 'user_email'
 	objects = UserManager()
+	
+	def set_url(self, email_hash):
+		self.activation_url = email_hash
+		self.save()
 	
 	def get_full_name(self):
 		return self.full_name
@@ -153,7 +160,10 @@ def register(request):
 	else:
 		user = CustomUser.objects.create_user(email=email, password=password)
 		if 'VALID' in user:
-			return {'VALID' : 'GOOD'}
+			#return user;
+			user_object = user['VALID']
+			Send_registration_email(user_object.user_email,user_object.activation_url);
+			return user
 		else:
 			return user
 	
@@ -181,7 +191,7 @@ class ImageProcessor:
 		
 		
 	def SaveImage(self, user):
-		filename = "/var/www/html/ShotForTheHeart/media/" + md5(user.user_email).hexdigest()+ ".jpg"
+		filename = "/var/www/html/ShotForTheHeart/media/" + hashlib.md5(user.user_email).hexdigest()+ ".jpg"
 		self.img.save(filename)
 		user.profile_photo = md5(user.user_email).hexdigest() + ".jpg"
 		user.save()
@@ -196,14 +206,24 @@ class ImageProcessor:
 		
 		
 		
-def Send_registration_email(emailAddress):
+def Send_registration_email(emailAddress, activation_url):
 	file = open('/var/www/html/ShotForTheHeart/ShotForTheHeart/Credentials').read()
 	credentials = eval(file)
 	mailSystem = Mailin("https://api.sendinblue.com/v2.0", credentials['email'])
 	message = {
 		'to' : {'knoop.rick@gmail.com':'Rick Knoop'},
 		'from' : ['sftheart@uoguelph.ca' , 'Shot for the heart Guelph'],
-		'subject' : 'Registration email.',
-		'html' : 'Test email, it <h1> works! </h1>',
+		'subject' : 'Activate your account',
+		'html' : 'Hello<br>You recently decided to register for an account at the Shot for the Heart website. Please click the link below to activate your account.<br><br>http://shotfortheheart.ca/register/'+activation_url+'<br><br>Thanks,<br>Shot for the Heart system administator.',
 	}
-	return mailSystem.send_email(message)['code']
+	result = mailSystem.send_email(message)
+	if 'failure' in result['code']:
+		try:
+			file = open('/var/www/html/ShotForTheHeart/emailError.log', 'w+')
+			file.write(str(timezone.now)+' email address: '+str(user_email)+' Error information: '+str(result)+'\n\n')
+			file.close()
+		except:
+			pass
+		return {'ERROR': 'Your account was created correctly, but the email failed. Please contact sftheart@uoguelph.ca'}
+	else:
+		return {'VALID': 'Everything worked succesfully'}
