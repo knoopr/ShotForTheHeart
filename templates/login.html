@@ -26,9 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>-->
 	<div class="wrapper">
 		<h3 class="form-heading">Welcome back! Please sign In</h3>
         <hr class="color-graph">
-        <div class="alert alert-danger" style="Display:{{display}}">
-   			{{message}}
+        {% if error_message != None %}
+        <div class="alert alert-danger" style="Display:block">
+   			{{error_message}}
    		</div>
+   		{% endif %}
+   		{% if success_message != None %}
+        <div class="alert alert-success" style="Display:block">
+   			{{success_message}}
+   		</div>
+   		{% endif %}
         <br>
         <form  action ="{{request.get_full_path}}" method="post" name="loginForm" class="form-signin" id="loginForm">
             {% csrf_token %}

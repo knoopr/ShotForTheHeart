@@ -9,22 +9,27 @@ from hashlib import md5
 from io import BytesIO
 from mailin import Mailin
 from PIL import Image
+from string import punctuation
 import base64
 import re
 
 
 class UserManager (BaseUserManager):
 	def create_user(self,email,password=None):
-		user = self.model(user_email = email)
-		user.set_password(password)
-		user.save()
-		return user
+		try:
+			user = self.model(user_email = email)
+			user.set_password(password)
+			user.save()
+			return {'VALID': user}
+		except:
+			return {'ERROR': 'A user with that email already exists!'}
 	
 	def create_superuser(self,email,password):
 		user=self.create_user(email,password)
 		user.is_staff = True
 		user.save()
 		return user()
+		
 
 class CustomUser(AbstractBaseUser):
 	class Meta:
@@ -110,17 +115,47 @@ def authorize(request):
 			login(request,user)
 			return {'VALID' : 'Logged in succesfully'}
 		else:
-			return {'ERROR' : 'Username or password incorrect'}
+			return {'ERROR' : 'Username or password incorrect!'}
 		
+	return {'ERROR' : 'An unknown error occurred'}
+	
+	
+def check_password(password, confirm):
+	if password != confirm:
+		return {'ERROR' : 'The two passwords do not match.'}
+	
+	elif len(password) < 10:
+		return {'ERROR' : 'The password is too short.'}
+
+	security_combo = [0,0,0]
+	for c in password:
+		if c.isupper():
+			security_combo[0] = 1
+		elif c.isalpha():
+			security_combo[1] = 1
+		elif c.isdigit():
+			security_combo[2] = 1
+		elif c in punctuation:
+			security_combo[2] = 1
+	if 0 in security_combo:
+		return {'ERROR' : 'Password is not complex enough. Password requires 1 lower, 1 upper and 1 symbol or number.'}
+		
+	return {'VALID' : 'Good'}
+
+
 def register(request):
 	email = request.POST.get('Email')
 	password = request.POST.get('Password')
 	confirm = request.POST.get('confirmPassword')
-	if password != confirm:
-		return {'ERROR' : 'Unmatched Passwords'}
+	security_check = check_password(password, confirm)
+	if 'ERROR' in security_check:
+		return security_check
 	else:
 		user = CustomUser.objects.create_user(email=email, password=password)
-		return {'VALID' : 'GOOD'}
+		if 'VALID' in user:
+			return {'VALID' : 'GOOD'}
+		else:
+			return user
 	
 	
 class ImageProcessor:
@@ -167,8 +202,8 @@ def Send_registration_email(emailAddress):
 	mailSystem = Mailin("https://api.sendinblue.com/v2.0", credentials['email'])
 	message = {
 		'to' : {'knoop.rick@gmail.com':'Rick Knoop'},
-		'from' : {'registrar@shotfortheheart.ca' : 'Shot for the heart Guelph'},
-		'subject' : 'Test Email',
+		'from' : ['sftheart@uoguelph.ca' , 'Shot for the heart Guelph'],
+		'subject' : 'Registration email.',
 		'html' : 'Test email, it <h1> works! </h1>',
 	}
 	return mailSystem.send_email(message)['code']
