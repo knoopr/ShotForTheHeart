@@ -85,29 +85,6 @@ class CustomUser(AbstractBaseUser):
 		self.study_year = POST.get('study_year')
 		self.hangout_spot = POST.get('hangout_spot')
 		self.save()
-		
-	
-	# def ChangeProgram(self, program_post):
-	# 	if len(program_post) < 50:
-	# 		self.study_program = program_post
-	# 		self.save()
-	# 		return True
-	# 	return False
-			
-	# def ChangeYear(self, year_post):
-	# 	if year_post is not None and year_post.isdigit():
-	# 		self.study_year = int(year_post)
-	# 		self.save()
-	# 		return True
-	# 	return False
-	
-	# def ChangeHangout(self, hangout_post):
-	# 	if len(hangout_post) < 50:
-	# 		self.study_hangout = hanout_post
-	# 		self.save()
-	# 		return True
-	# 	return False
-		
 	
 	
 
