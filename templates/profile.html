@@ -33,10 +33,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 	        	<img src="/media/{{request.user.profile_photo}}"/>
 	        {% endif %}
         </div>
+        {% if active %}
         <span class="btn btn-success" id="uploadButton">Upload an Image</span>
+        {% endif %}
 	</div>
 	<div class="col-md-6">
-		<form role="form" action="/profile/" method="post">
+		<form id="infoForm" role="form" action="/profile/" method="post">
 			{% csrf_token %}
 			<div id="information">
 				<div class="row-fluid clearfix">
@@ -75,21 +77,65 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 					    <input class="form-control" id="inputHangout" name="hangout_spot" type="text" value="{{ request.user.hangout_spot|default:"" }}">
 					</div>
 				</div>
+				{% if active %}
 				<div class="row-fluid clearfix">
 					<div class="col-md-12">
 					    <button type="submit" class="btn btn-success" id="saveButton">Save profile!</button>
 					</div>
 				</div>
+				{% endif %}
 			</div>
 			</form>
 		<br><br>
 		
 	</div>
 </div>
+{% if caught and active %}
+<div id="Modal" class="modal fade" role="dialog" style="top:45%">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Captured</h4>
+      </div>
+      <div class="modal-body">
+        <p>The person targeting you said they captured you; is this correct:</p>
+        <form  action ="{{request.get_full_path}}" method="post">
+			{% csrf_token %}
+			<button class="btn btn-success" name="Caught" value="True">Yes</button>
+	      	<button class="btn btn-danger" name="Caught" value="False">No</button>
+		</form>
+      	
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endif %}
+{% if caught and not active %}
+<div id="Modal" class="modal fade" role="dialog" style="top:45%">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Captured</h4>
+      </div>
+      <div class="modal-body">
+        <p>Good job playing this year and thanks for helping raise money for the heart and stroke foundation </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 
 {% block javascript %}
+{% if active %}
 <script type="text/javascript" src="../static/croppic.js"></script>
 <script type="text/javascript">
 	var croppicHeaderOptions = {
@@ -120,8 +166,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 		    $('#profilePicture').css("display","none");
 		},
 		onError:function(errormessage){ console.log('onError:'+errormessage) }
-}
+	}
 	var croppic = new Croppic('profilePicture', croppicHeaderOptions);
-
 </script>
+{% endif %}
+
+{% if caught %}
+<script type="text/javascript">
+    $(window).load(function(){
+        $('#Modal').modal('show');
+    });
+</script>
+{% endif %}
+
+{% if not active %}
+<script type="text/javascript">
+	$('.form-control').prop('disabled', true);
+</script>
+{% endif %}
+
 {% endblock %}

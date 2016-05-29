@@ -16,7 +16,7 @@
 from django.contrib.auth import logout as Logout #wanted to keep naming convention for view functions
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.template.context_processors import csrf
@@ -45,13 +45,25 @@ def profile(request):
 	if request.method == 'GET':
 		request.user.updateTime()
 		template = get_template('profile.html')
-		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Profile'}))
-		return HttpResponse(html);
+		user_caught = request.user.user_eliminated
+		user_active = request.user.is_active
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Profile', 'caught' : user_caught, 'active': user_active}))
+		return HttpResponse(html)
 	if request.method == 'POST':
-		request.user.updateInfo(request.POST)
-		template = get_template('profile.html')
-		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Profile'}))
-		return HttpResponse(html);
+		if 'Caught' in request.POST:
+			if request.user.user_eliminated:
+				if request.POST.get('Caught') == 'True':
+					request.user.is_active = False
+					request.user.save()
+				else:
+					request.user.user_eliminated = False
+					request.user.save()
+				return HttpResponseRedirect('/profile')
+			else:
+				return HttpResponseForbidden()
+		else:
+			request.user.updateInfo(request.POST)
+			return HttpResponseRedirect('/profile')
 		
 
 	
@@ -64,7 +76,7 @@ def login(request):
 			html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login', 'success_message':'You were registered succesfully, please follow the link in your email.'}))
 		else:
 			html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login'}))
-		return HttpResponse(html);
+		return HttpResponse(html)
 	elif request.method == 'POST':
 		result = models.authorize(request)
 		if 'ERROR' in result:
@@ -77,7 +89,7 @@ def login(request):
 			html = template.render(dict)
 			return HttpResponse(html)
 		else:
-				return HttpResponseRedirect('/profile/')
+			return HttpResponseRedirect('/profile/')
 
 def logout(request):
 	Logout(request)
@@ -98,7 +110,7 @@ def register(request):
 			return HttpResponseRedirect('/profile/')
 		template = get_template('register.html')
 		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login', 'display':'none'}))
-		return HttpResponse(html);
+		return HttpResponse(html)
 	elif request.method == 'POST':
 		result = models.register(request)
 		if 'ERROR' in result:
@@ -116,16 +128,16 @@ def register(request):
 @login_required
 def target(request):
 	if request.method == 'GET':
-		target_User = models.CustomUser.objects.get(id=request.user.target_id);
+		target_User = models.CustomUser.objects.get(id=request.user.target_id)
 		template = get_template('target.html')
 		target = {'picture' : target_User.profile_photo, 'name':target_User.full_name, 'program' : target_User.study_program, 'year': target_User.study_year, 'location' : target_User.hangout_spot, 'caught' : target_User.user_eliminated}
 		html = template.render(RequestContext(request,{'city': 'Guelph', 'active_tab': 'Target', 'target' : target}))
-		return HttpResponse(html);
+		return HttpResponse(html)
 	if request.method == 'POST':
-		target_User = models.CustomUser.objects.get(id=request.user.target_id);
-		target_User.user_eliminated = 1;
+		target_User = models.CustomUser.objects.get(id=request.user.target_id)
+		target_User.user_eliminated = True
 		target_User.save()
-		return HttpResponseRedirect("/target");
+		return HttpResponseRedirect("/target")
 
 
 def upload(request):
@@ -141,18 +153,18 @@ def upload(request):
 def base(request):
 	template = get_template('base.html')
 	html = template.render({'city': 'Guelph'})
-	return HttpResponse(html);
+	return HttpResponse(html)
 
 def activate(request):
-	strMatch = match('\/register\/(.*)$', request.path);
+	strMatch = match('\/register\/(.*)$', request.path)
 	if strMatch and '/' not in strMatch.group(1):
 		try:
-			New_user = models.CustomUser.objects.get(activation_url=strMatch.group(1));
-			New_user.activation_url = "";
-			New_user.is_active = True;
+			New_user = models.CustomUser.objects.get(activation_url=strMatch.group(1))
+			New_user.activation_url = ""
+			New_user.is_active = True
 			New_user.save()
-			return HttpResponse('It works! Your email is: ' + New_user.user_email);
+			return HttpResponse('It works! Your email is: ' + New_user.user_email)
 		except Exception as e:
-			raise Http404('You appear to have been directed to this page in error, or a link has expired');
+			raise Http404('You appear to have been directed to this page in error, or a link has expired')
 	else:
 		raise Http404('You appear to have been directed to this page in error')
