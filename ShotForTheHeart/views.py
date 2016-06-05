@@ -51,12 +51,13 @@ def profile(request):
 		return HttpResponse(html)
 	if request.method == 'POST':
 		if 'Caught' in request.POST:
-			if request.user.user_eliminated:
+			if request.user.user_eliminated == 1:
 				if request.POST.get('Caught') == 'True':
+					request.user.user_eliminated = 2
 					request.user.is_active = False
 					request.user.save()
 				else:
-					request.user.user_eliminated = False
+					request.user.user_eliminated = -1
 					request.user.save()
 				return HttpResponseRedirect('/profile')
 			else:
@@ -73,7 +74,7 @@ def login(request):
 			return HttpResponseRedirect('/profile/')
 		template = get_template('login.html')
 		if request.GET.get('last') == '/register/':
-			html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login', 'success_message':'You were registered succesfully, please follow the link in your email.'}))
+			html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login', 'success_message':'You were registered succesfully, please follow the link in your photo.'}))
 		else:
 			html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login'}))
 		return HttpResponse(html)
@@ -128,14 +129,14 @@ def register(request):
 @login_required
 def target(request):
 	if request.method == 'GET':
-		target_User = models.CustomUser.objects.get(id=request.user.target_id)
+		target_User = request.user.getTarget()
 		template = get_template('target.html')
 		target = {'picture' : target_User.profile_photo, 'name':target_User.full_name, 'program' : target_User.study_program, 'year': target_User.study_year, 'location' : target_User.hangout_spot, 'caught' : target_User.user_eliminated}
 		html = template.render(RequestContext(request,{'city': 'Guelph', 'active_tab': 'Target', 'target' : target}))
 		return HttpResponse(html)
 	if request.method == 'POST':
 		target_User = models.CustomUser.objects.get(id=request.user.target_id)
-		target_User.user_eliminated = True
+		target_User.user_eliminated = 1
 		target_User.save()
 		return HttpResponseRedirect("/target")
 
@@ -147,7 +148,6 @@ def upload(request):
 		return HttpResponse(processor.SaveImage(request.user))
 	else:
 		return HttpResponse(status=405)
-
 	
 
 def base(request):

@@ -52,7 +52,7 @@ class CustomUser(AbstractBaseUser):
 	hangout_spot = models.CharField(max_length=50, blank=True)
 	profile_photo = models.ImageField(upload_to='./', blank=True)
 	#last_login = models.DateTimeField(null=True, blank=True)
-	user_eliminated = models.BooleanField(default=False)
+	user_eliminated = models.SmallIntegerField(default=0)
 	target_id = models.PositiveSmallIntegerField(null=True, blank=True)
 	activation_url = models.CharField(max_length=126, blank=True)
 	
@@ -85,6 +85,15 @@ class CustomUser(AbstractBaseUser):
 		self.study_year = POST.get('study_year')
 		self.hangout_spot = POST.get('hangout_spot')
 		self.save()
+	
+	def getTarget(self):
+		target_user = CustomUser.objects.get(id=self.target_id)
+		while target_user.user_eliminated == 2:
+			self.target_id = target_user.target_id
+			self.save()
+			target_user = CustomUser.objects.get(id=self.target_id)
+		return target_user
+		
 	
 	
 
@@ -170,7 +179,7 @@ class ImageProcessor:
 	def SaveImage(self, user):
 		filename = "/var/www/html/ShotForTheHeart/media/" + hashlib.md5(user.user_email).hexdigest()+ ".jpg"
 		self.img.save(filename)
-		user.profile_photo = md5(user.user_email).hexdigest() + ".jpg"
+		user.profile_photo = hashlib.md5(user.user_email).hexdigest() + ".jpg"
 		user.save()
 		return '''{
 			"status" : "success",
