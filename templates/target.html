@@ -28,28 +28,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 {% block content %}
 <div class="row-fluid">
 	<div class="col-md-6">
-		<img id="picture" src="/media/{{target.picture}}" alt ="Your target's photo">
+		<img id="picture" src="/media/{{target.profile_photo}}" alt ="Your target's photo">
 	</div>
 	<div class="col-md-6">
 		<div id="information">
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label"> Name: </div>
-				<div class="col-md-8"> {{target.name}} </div>
+				<div class="col-md-8"> {{target.full_name}} </div>
 			</div>
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label" > Program: </div>
-				<div class="col-md-8"> {{target.program}} </div>
+				<div class="col-md-8"> {{target.study_program}} </div>
 			</div>
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label"> Year: </div>
-				<div class="col-md-8"> {{target.year}} </div>
+				<div class="col-md-8"> {{target.study_year}} </div>
 			</div>
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label"> Hangout Spot: </div>
-				<div class="col-md-8"> {{target.location}} </div>
+				<div class="col-md-8"> {{target.hangout_spot}} </div>
 			</div>
 			<br>
-			{% if target.caught == 0 %}
+			{% if target.user_eliminated == 0 and not caught%}
 			<div class="row-fluid clearfix">
 				<div class="col-md-3"></div>
 				<div class="col-md-6">
@@ -63,7 +63,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 		</div>
 	</div>
 </div>
-{% if caught == -1 %}
+{% if target.user_eliminated == -1 %}
 <div id="Modal" class="modal fade" role="dialog" style="top:45%">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -81,7 +81,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
   </div>
 </div>
 {% endif %}
-{% if target.caught == 1 %}
+{% if target.user_eliminated == 1 %}
 <div id="Modal" class="modal fade" role="dialog" style="top:45%">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -91,6 +91,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
       </div>
       <div class="modal-body">
         <p>Waiting for your target to confirm they were captured.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endif %}
+{% if caught %}
+<div id="Modal" class="modal fade" role="dialog" style="top:45%">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Target Capture</h4>
+      </div>
+      <div class="modal-body">
+        <p>You are out of the game, thanks for playing</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -133,7 +152,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 // 	});
 
 
-{% if target.caught != 0%}
+{% if target.user_eliminated != 0 or caught%}
     $(window).load(function(){
         $('#Modal').modal('show');
     });

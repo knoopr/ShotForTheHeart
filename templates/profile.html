@@ -118,7 +118,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
         <h4 class="modal-title">Captured</h4>
       </div>
       <div class="modal-body">
-        <p>The person targeting you said they captured you; is this correct:</p>
+        <p>The person targeting you has said they captured you; is this correct:</p>
         <form  action ="{{request.get_full_path}}" method="post">
 			{% csrf_token %}
 			<button class="btn btn-success" name="Caught" value="True">Yes</button>

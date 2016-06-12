@@ -27,15 +27,45 @@ import base64
 from re import match
 
 
+@login_required
+def admin(request):
+	if request.user.is_staff:
+		if request.method == 'GET':
+			template = get_template('admin.html')
+			users_contesting = models.CustomUser.objects.filter(user_eliminated=-1)
+			contested_users = []
+			for user in users_contesting:
+				Captor = models.CustomUser.objects.get(target_id=user.id, is_active=True)
+				contested_users.append({'Captor':Captor,'Captive': user})
+			active_users = models.CustomUser.objects.filter(is_active=True).exclude(user_eliminated=-1)
+			inactive_users = models.CustomUser.objects.filter(is_active=False)
+			html = template.render(RequestContext(request, {'city': 'Guelph', 'Contested': contested_users, 'Active': active_users, 'Inactive' : inactive_users}))
+			return HttpResponse(html)
+		else:
+			users_contesting = models.CustomUser.objects.filter(user_eliminated=-1)
+			for captive_user in users_contesting:
+				contest_decision = request.POST.get(str(captive_user.id))
+				if contest_decision == "Captor":
+					captive_user.user_eliminated = 2
+					captive_user.is_active = False
+					captive_user.save()
+				else:
+					captive_user.user_eliminated = 1
+					captive_user.is_active = True
+					captive_user.save()
+			return HttpResponseRedirect("/admin/")
+	else:
+		return HttpResponseRedirect('/profile/')
+
 def main(request):
 	template = get_template('main.html')
-	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Home'}))
+	html = template.render(RequestContext(request, {'city': 'Guelph'}))
 	return HttpResponse(html)
 
 
 def fundraising(request):
 	template = get_template('fundraising.html')
-	html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Fundraising'}))
+	html = template.render(RequestContext(request, {'city': 'Guelph'}))
 	return HttpResponse(html)
 
 
@@ -47,7 +77,7 @@ def profile(request):
 		template = get_template('profile.html')
 		user_caught = request.user.user_eliminated
 		user_active = request.user.is_active
-		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Profile', 'caught' : user_caught, 'active': user_active}))
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'caught' : user_caught, 'active': user_active}))
 		return HttpResponse(html)
 	if request.method == 'POST':
 		if 'Caught' in request.POST:
@@ -74,14 +104,16 @@ def login(request):
 			return HttpResponseRedirect('/profile/')
 		template = get_template('login.html')
 		if request.GET.get('last') == '/register/':
-			html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login', 'success_message':'You were registered succesfully, please follow the link in your photo.'}))
+			html = template.render(RequestContext(request, {'city': 'Guelph', 'success_message':'You were registered succesfully, please follow the link in your email.'}))
+		if request.GET.get('last') == '/activate/':
+			html = template.render(RequestContext(request, {'city': 'Guelph', 'success_message':'Your account is now active; please login now.'}))
 		else:
-			html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login'}))
+			html = template.render(RequestContext(request, {'city': 'Guelph'}))
 		return HttpResponse(html)
 	elif request.method == 'POST':
 		result = models.authorize(request)
 		if 'ERROR' in result:
-			dict = {'city': 'Guelph', 'active_tab': 'Login', 'error_message':'Please enter a valid email and password!'}
+			dict = {'city': 'Guelph', 'error_message':'Please enter a valid email and password!'}
 			email = request.POST.get('Email')
 			dict['email_field'] = 'value=%s' %(email)
 			dict['pass_field'] = 'autofocus=""'
@@ -90,7 +122,10 @@ def login(request):
 			html = template.render(dict)
 			return HttpResponse(html)
 		else:
-			return HttpResponseRedirect('/profile/')
+			if request.GET.get('next') == None:
+				return HttpResponseRedirect('/profile/')
+			else:
+				return HttpResponseRedirect(request.GET.get('next'))
 
 def logout(request):
 	Logout(request)
@@ -110,12 +145,12 @@ def register(request):
 		if request.user.is_authenticated():
 			return HttpResponseRedirect('/profile/')
 		template = get_template('register.html')
-		html = template.render(RequestContext(request, {'city': 'Guelph', 'active_tab': 'Login', 'display':'none'}))
+		html = template.render(RequestContext(request, {'city': 'Guelph', 'display':'none'}))
 		return HttpResponse(html)
 	elif request.method == 'POST':
 		result = models.register(request)
 		if 'ERROR' in result:
-			dict = {'city': 'Guelph', 'active_tab': 'Login', 'display':'block', 'message':result['ERROR']}
+			dict = {'city': 'Guelph', 'display':'block', 'message':result['ERROR']}
 			email = request.POST.get('Email')
 			dict['email_field'] = 'value=%s' %(email)
 			dict['pass_field'] = 'autofocus=""'
@@ -129,10 +164,10 @@ def register(request):
 @login_required
 def target(request):
 	if request.method == 'GET':
+		caught = True if request.user.user_eliminated == 2 else False
 		target_User = request.user.getTarget()
 		template = get_template('target.html')
-		target = {'picture' : target_User.profile_photo, 'name':target_User.full_name, 'program' : target_User.study_program, 'year': target_User.study_year, 'location' : target_User.hangout_spot, 'caught' : target_User.user_eliminated}
-		html = template.render(RequestContext(request,{'city': 'Guelph', 'active_tab': 'Target', 'target' : target}))
+		html = template.render(RequestContext(request,{'city': 'Guelph', 'target' : target_User, 'caught': caught}))
 		return HttpResponse(html)
 	if request.method == 'POST':
 		target_User = models.CustomUser.objects.get(id=request.user.target_id)
@@ -163,7 +198,7 @@ def activate(request):
 			New_user.activation_url = ""
 			New_user.is_active = True
 			New_user.save()
-			return HttpResponse('It works! Your email is: ' + New_user.user_email)
+			return HttpResponseRedirect('/login/?last=/activate/')
 		except Exception as e:
 			raise Http404('You appear to have been directed to this page in error, or a link has expired')
 	else:

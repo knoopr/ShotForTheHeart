@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 
   <!-- Custom styles for this template -->
-  <link href="../static/base.css" rel="stylesheet">
+  <link href="http://shotfortheheart.ca/static/base.css" rel="stylesheet">
 
   <!-- Custom style for this page -->
   {% block styles %}{% endblock %}
@@ -51,14 +51,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="{% ifequal active_tab 'Home' %} active {% endifequal %}"><a href="/">Home</a></li>
+            <li class="{% ifequal request.path '/' %} active {% endifequal %}"><a href="/">Home</a></li>
             {% if user.is_authenticated %}
-            <li class="{% ifequal active_tab 'Profile' %} active {% endifequal %}"><a href="/profile">Me</a></li>
-            <li class="{% ifequal active_tab 'Target' %} active {% endifequal %}"><a href="/target">Target</a></li>
-            <li class="{% ifequal active_tab 'Fundraising' %} active {% endifequal %}"><a href=/fundraising>Fund raising</a></li>
+            <li class="{% ifequal request.path '/profile/'  %} active {% endifequal %}"><a href="/profile">Me</a></li>
+            <li class="{% ifequal request.path '/target/' %} active {% endifequal %}"><a href="/target">Target</a></li>
+            <li class="{% ifequal request.path '/fundraising/' %} active {% endifequal %}"><a href=/fundraising>Fund raising</a></li>
+            {% if request.user.is_staff %}
+            <li class="{% ifequal request.path '/admin/' %} active {% endifequal %}"><a href="/admin" >Admin</a></li>
+            {% endif %}
             <li><a href="/logout" >Logout</a></li>
             {% else %}
-            <li class="{% ifequal active_tab 'Login' %} active {% endifequal %}"><a href="/login" >Login</a></li>
+            <li class="{% if request.path == '/login/' or request.path == '/register/' %} active {% endif %}"><a href="/login" >Login</a></li>
           	{% endif %}
           	
           </ul>
