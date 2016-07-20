@@ -16,7 +16,7 @@
 from django.contrib.auth import logout as Logout #wanted to keep naming convention for view functions
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404,  HttpResponseBadRequest
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.template.context_processors import csrf
@@ -28,7 +28,24 @@ from re import match
 
 
 @login_required
-def admin(request):
+def admin_users(request):
+	if request.user.is_staff:
+		if request.method == 'GET':
+			template = get_template('admin.html')
+			active_users = models.CustomUser.objects.filter(is_active=True).exclude(user_eliminated=-1)
+			eliminated_users = models.CustomUser.objects.filter(user_eliminated=2)
+			inactive_users = models.CustomUser.objects.filter(is_active=False).exclude(user_eliminated=2)
+			html = template.render(RequestContext(request, {'city': 'USERS', 'Active': active_users, 'Inactive' : inactive_users, 'Eliminated' : eliminated_users}))
+			return HttpResponse(html)
+		else:
+			return HttpResponseBadRequest()
+	else:
+		return HttpResponseRedirect('/profile/')
+
+
+
+@login_required
+def admin_contests(request):
 	if request.user.is_staff:
 		if request.method == 'GET':
 			template = get_template('admin.html')
@@ -37,9 +54,7 @@ def admin(request):
 			for user in users_contesting:
 				Captor = models.CustomUser.objects.get(target_id=user.id, is_active=True)
 				contested_users.append({'Captor':Captor,'Captive': user})
-			active_users = models.CustomUser.objects.filter(is_active=True).exclude(user_eliminated=-1)
-			inactive_users = models.CustomUser.objects.filter(is_active=False)
-			html = template.render(RequestContext(request, {'city': 'Guelph', 'Contested': contested_users, 'Active': active_users, 'Inactive' : inactive_users}))
+			html = template.render(RequestContext(request, {'city': 'CAPTURE', 'Contested': contested_users}))
 			return HttpResponse(html)
 		else:
 			users_contesting = models.CustomUser.objects.filter(user_eliminated=-1)
@@ -57,10 +72,13 @@ def admin(request):
 	else:
 		return HttpResponseRedirect('/profile/')
 
+
+
 def main(request):
 	template = get_template('main.html')
 	html = template.render(RequestContext(request, {'city': 'Guelph'}))
 	return HttpResponse(html)
+
 
 
 def fundraising(request):
@@ -95,7 +113,7 @@ def profile(request):
 		else:
 			request.user.updateInfo(request.POST)
 			return HttpResponseRedirect('/profile')
-		
+			
 
 	
 def login(request):

@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Shot For The Heart {{city}} - {{active_tab}} </title>
+  <title>Shot For The Heart {{city}}</title>
 
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
@@ -57,7 +57,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
             <li class="{% ifequal request.path '/target/' %} active {% endifequal %}"><a href="/target">Target</a></li>
             <li class="{% ifequal request.path '/fundraising/' %} active {% endifequal %}"><a href=/fundraising>Fund raising</a></li>
             {% if request.user.is_staff %}
-            <li class="{% ifequal request.path '/admin/' %} active {% endifequal %}"><a href="/admin" >Admin</a></li>
+            <!--<li class="{% ifequal request.path '/admin/' %} active {% endifequal %}"><a href="/admin" >Admin</a></li>-->
+            <li class="dropdown {% if '/admin/' in request.path  %} active {% endif %}">
+				<a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+				<ul class="dropdown-menu">
+					<li><a href="/admin/users/">Users</a></li>
+					<li><a href="/admin/users/contests/">User Contests</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="/admin/settings">Game Settings</a></li>
+				</ul>
+		    </li>
+            
             {% endif %}
             <li><a href="/logout" >Logout</a></li>
             {% else %}

@@ -34,7 +34,8 @@ import ShotForTheHeart.views as views;
 
 urlpatterns = [
 	url(r'^$', views.main),
-    url(r'^admin/', views.admin),
+    url(r'^admin/users/$', views.admin_users),
+    url(r'^admin/users/contests/$', views.admin_contests),
     url(r'^base/$', views.base),
     url(r'^fundraising/$',views.fundraising),
     url(r'^login/$', views.login),
