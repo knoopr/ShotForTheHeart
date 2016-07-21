@@ -12,7 +12,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
-
+import base64
 from django.contrib.auth import logout as Logout #wanted to keep naming convention for view functions
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -21,10 +21,11 @@ from django.template import RequestContext
 from django.template.loader import get_template
 from django.template.context_processors import csrf
 from datetime import datetime
-import ShotForTheHeart.models as models
+from hashlib import md5
 from PIL import Image
-import base64
 from re import match
+import ShotForTheHeart.models as models
+
 
 
 @login_required
@@ -131,13 +132,13 @@ def login(request):
 	elif request.method == 'POST':
 		result = models.authorize(request)
 		if 'ERROR' in result:
-			dict = {'city': 'Guelph', 'error_message':'Please enter a valid email and password!'}
+			display_dict = {'city': 'Guelph', 'error_message':'Please enter a valid email and password!'}
 			email = request.POST.get('Email')
-			dict['email_field'] = 'value=%s' %(email)
-			dict['pass_field'] = 'autofocus=""'
+			display_dict['email_field'] = 'value=%s' %(email)
+			display_dict['pass_field'] = 'autofocus=""'
 			template = get_template('login.html')
-			dict.update(csrf(request))
-			html = template.render(dict)
+			display_dict.update(csrf(request))
+			html = template.render(display_dict)
 			return HttpResponse(html)
 		else:
 			if request.GET.get('next') == None:
@@ -168,13 +169,13 @@ def register(request):
 	elif request.method == 'POST':
 		result = models.register(request)
 		if 'ERROR' in result:
-			dict = {'city': 'Guelph', 'display':'block', 'message':result['ERROR']}
+			display_dict = {'city': 'Guelph', 'display':'block', 'message':result['ERROR']}
 			email = request.POST.get('Email')
-			dict['email_field'] = 'value=%s' %(email)
-			dict['pass_field'] = 'autofocus=""'
+			display_dict['email_field'] = 'value=%s' %(email)
+			display_dict['pass_field'] = 'autofocus=""'
 			template = get_template('register.html')
-			dict.update(csrf(request))
-			html = template.render(dict)
+			display_dict.update(csrf(request))
+			html = template.render(display_dict)
 			return HttpResponse(html)
 		else:
 			return HttpResponseRedirect('/login/?last=/register/')
@@ -198,7 +199,20 @@ def upload(request):
 	if request.method == 'POST':
 		processor = models.ImageProcessor(request)
 		processor.CropImage()
-		return HttpResponse(processor.SaveImage(request.user))
+		filename = md5(request.user.user_email).hexdigest()+ ".jpg"
+		save_result = processor.SaveImage(filename)
+		if save_result:
+			request.user.profile_photo = filename
+			request.user.save()
+			return HttpResponse('''{
+				"status" : "success",
+				"url" : "/media/%s"
+				}''' % filename)
+		else:
+			return HttpResponse('''{
+				"status" : "error",
+				"message" : "There was an error uploading the file"
+				}''')
 	else:
 		return HttpResponse(status=405)
 	

@@ -1,5 +1,6 @@
 import base64
 from io import BytesIO
+import os
 from PIL import Image
 
 
@@ -26,15 +27,13 @@ class ImageProcessor:
 		self.img = self.img.crop((self.corner[0], self.corner[1] , self.cropDim[0] + self.corner[0], self.cropDim[1] + self.corner[1]))
 		
 		
-	def SaveImage(self, user):
-		filename = "/var/www/html/ShotForTheHeart/media/" + hashlib.md5(user.user_email).hexdigest()+ ".jpg"
-		self.img.save(filename)
-		user.profile_photo = hashlib.md5(user.user_email).hexdigest() + ".jpg"
-		user.save()
-		return '''{
-			"status" : "success",
-			"url" : "%s"
-		}''' % filename[29:]
+	def SaveImage(self, filename):
+		full_path = os.path.join("/var/www/html/ShotForTheHeart/media/", filename)
+		try:
+			self.img.save(full_path)
+			return True
+		except:
+			return False
 		
 	def LoadImage(self, path):
 		filename = "/var/www/html/ShotForTheHeart/" + path
