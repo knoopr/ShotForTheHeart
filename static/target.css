@@ -34,10 +34,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> */
 	margin: 0 auto 40px auto;
 }
 
+progress{
+	-webkit-appearance: none;
+	border: none;
+	vertical-align:center;
+}
+
+progress::-webkit-progress-value{
+	border-radius: 50px;
+	box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+	background: #e60800;
+	
+}
+
+
+progress::-webkit-progress-bar {
+	background: black;
+	border-radius: 50px;
+	padding: 2px;
+	box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.2);
+}
+
 progress:after {
-	text-align: center;
 	height:100%;
 	line-height:100%;
+	text-align: center;
     display: block;
     content: "$" attr(value) " / " attr(max);
 }
