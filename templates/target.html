@@ -28,25 +28,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 {% block content %}
 <div class="row-fluid">
 	<div class="col-md-6">
+		{% if request.user.money_raised > 15 %}
 		<img id="picture" src="/media/{{target.profile_photo}}" alt ="Your target's photo">
+		{% else %}
+		<progress value={{request.user.money_raised}} max=15 ></progress>
+		{% endif %}
 	</div>
 	<div class="col-md-6">
 		<div id="information">
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label"> Name: </div>
+				{% if request.user.money_raised > 30 %}
 				<div class="col-md-8"> {{target.full_name}} </div>
+				{% else %}
+				<progress value={{request.user.money_raised}} max=30 ></progress>
+				{% endif %}
 			</div>
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label" > Program: </div>
+				{% if request.user.money_raised > 45 %}
 				<div class="col-md-8"> {{target.study_program}} </div>
+				{% else %}
+				<progress value={{request.user.money_raised}} max=45 ></progress>
+				{% endif %}
 			</div>
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label"> Year: </div>
+				{% if request.user.money_raised > 60 %}
 				<div class="col-md-8"> {{target.study_year}} </div>
+				{% else %}
+				<progress value={{request.user.money_raised}} max=60 ></progress>
+				{% endif %}
 			</div>
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label"> Hangout Spot: </div>
+				{% if request.user.money_raised > 75 %}
 				<div class="col-md-8"> {{target.hangout_spot}} </div>
+				{% else %}
+				<progress value={{request.user.money_raised}} max=75 ></progress>
+				{% endif %}
 			</div>
 			<br>
 			{% if target.user_eliminated == 0 and not caught%}

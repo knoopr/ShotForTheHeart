@@ -11,7 +11,9 @@ env/
 *.pyc
 
 #ignoring migrations
-ShotForTheHeart/migrations
+#ShotForTheHeart/migrations
+#readding migrations as told that's best practice
+
 
 #ignoring images files
 media

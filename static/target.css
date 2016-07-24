@@ -34,3 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> */
 	margin: 0 auto 40px auto;
 }
 
+progress:after {
+	text-align: center;
+	height:100%;
+	line-height:100%;
+    display: block;
+    content: "$" attr(value) " / " attr(max);
+}
+

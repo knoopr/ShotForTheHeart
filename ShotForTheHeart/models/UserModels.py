@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 from django.core import validators
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
@@ -50,6 +51,7 @@ class CustomUser(AbstractBaseUser):
 	#last_login = models.DateTimeField(null=True, blank=True)
 	user_eliminated = models.SmallIntegerField(default=0)
 	target_id = models.PositiveSmallIntegerField(null=True, blank=True)
+	money_raised = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal(0.00))
 	activation_url = models.CharField(max_length=126, blank=True)
 	
 	#Required Fields
