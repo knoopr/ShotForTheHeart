@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ij@skt-m+2ks-9j-s%ik+$rst-6^6y^dkergk-rv)erba_qh$p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["shotfortheheart.ca", "www.shotfortheheart.ca"]
 

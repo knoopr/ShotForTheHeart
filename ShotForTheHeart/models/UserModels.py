@@ -6,6 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate, login, get_user_model
+from .Game import Game
 import hashlib
 import re
 
@@ -53,6 +54,7 @@ class CustomUser(AbstractBaseUser):
 	target_id = models.PositiveSmallIntegerField(null=True, blank=True)
 	money_raised = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal(0.00))
 	activation_url = models.CharField(max_length=126, blank=True)
+	participating_game = models.ForeignKey(Game, on_delete=models.PROTECT, default=1)
 	
 	#Required Fields
 	is_staff = models.BooleanField(_('staff status'), default=False, help_text = ("Designates whether the user can login to the admin site"))
