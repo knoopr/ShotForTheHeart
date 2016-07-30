@@ -25,11 +25,12 @@ from hashlib import md5
 from PIL import Image
 from re import match
 import ShotForTheHeart.models as models
+import ShotForTheHeart.utils as utils
 
 
 
 @login_required
-def admin_users(request):
+def adminUsers(request):
 	if request.user.is_staff:
 		if request.method == 'GET':
 			template = get_template('admin.html')
@@ -46,7 +47,7 @@ def admin_users(request):
 
 
 @login_required
-def admin_contests(request):
+def adminContests(request):
 	if request.user.is_staff:
 		if request.method == 'GET':
 			template = get_template('admin.html')
@@ -96,7 +97,7 @@ def profile(request):
 		template = get_template('profile.html')
 		user_caught = request.user.user_eliminated
 		user_active = request.user.is_active
-		html = template.render(RequestContext(request, {'city': 'Guelph', 'caught' : user_caught, 'active': user_active}))
+		html = template.render(RequestContext(request, {'city': request.user.participating_game, 'caught' : user_caught, 'active': user_active}))
 		return HttpResponse(html)
 	if request.method == 'POST':
 		if 'Caught' in request.POST:
@@ -123,14 +124,14 @@ def login(request):
 			return HttpResponseRedirect('/profile/')
 		template = get_template('login.html')
 		if request.GET.get('last') == '/register/':
-			html = template.render(RequestContext(request, {'city': 'Guelph', 'success_message':'You were registered succesfully, please follow the link in your email.'}))
+			html = template.render(RequestContext(request, {'city': 'Success', 'success_message':'You were registered succesfully, please follow the link in your email.'}))
 		if request.GET.get('last') == '/activate/':
-			html = template.render(RequestContext(request, {'city': 'Guelph', 'success_message':'Your account is now active; please login now.'}))
+			html = template.render(RequestContext(request, {'city': 'Success', 'success_message':'Your account is now active; please login now.'}))
 		else:
 			html = template.render(RequestContext(request, {'city': 'Guelph'}))
 		return HttpResponse(html)
 	elif request.method == 'POST':
-		result = models.authorize(request)
+		result = utils.authorize(request)
 		if 'ERROR' in result:
 			display_dict = {'city': 'Guelph', 'error_message':'Please enter a valid email and password!'}
 			email = request.POST.get('Email')
@@ -167,7 +168,7 @@ def register(request):
 		html = template.render(RequestContext(request, {'city': 'Guelph', 'display':'none'}))
 		return HttpResponse(html)
 	elif request.method == 'POST':
-		result = models.register(request)
+		result = utils.register(request)
 		if 'ERROR' in result:
 			display_dict = {'city': 'Guelph', 'display':'block', 'message':result['ERROR']}
 			email = request.POST.get('Email')
@@ -183,15 +184,19 @@ def register(request):
 @login_required
 def target(request):
 	if request.method == 'GET':
-		caught = True if request.user.user_eliminated == 2 else False
-		target_User = request.user.getTarget()
+		player_caught = True if request.user.user_eliminated == 2 else False
+		if request.user.participating_game.start_date is None:
+			game_started = False
+		elif request.user.participating_game.start_date < datetime.now():
+			game_started = False
+		else:
+			game_started = True
 		template = get_template('target.html')
-		html = template.render(RequestContext(request,{'city': 'Guelph', 'target' : target_User, 'caught': caught}))
+		html = template.render(RequestContext(request,{'city': 'Guelph', 'caught': player_caught, "started" : game_started}))
 		return HttpResponse(html)
 	if request.method == 'POST':
-		target_User = models.CustomUser.objects.get(id=request.user.target_id)
-		target_User.user_eliminated = 1
-		target_User.save()
+		request.user.target.user_eliminated = 1
+		request.user.target.save()
 		return HttpResponseRedirect("/target")
 
 

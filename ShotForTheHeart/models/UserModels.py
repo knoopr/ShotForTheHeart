@@ -5,7 +5,6 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth import authenticate, login, get_user_model
 from .Game import Game
 import hashlib
 import re
@@ -51,7 +50,7 @@ class CustomUser(AbstractBaseUser):
 	profile_photo = models.ImageField(upload_to='./', blank=True)
 	#last_login = models.DateTimeField(null=True, blank=True)
 	user_eliminated = models.SmallIntegerField(default=0)
-	target_id = models.PositiveSmallIntegerField(null=True, blank=True)
+	target = models.ForeignKey("CustomUser", on_delete=models.SET_NULL, null=True, blank=True)
 	money_raised = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal(0.00))
 	activation_url = models.CharField(max_length=126, blank=True)
 	participating_game = models.ForeignKey(Game, on_delete=models.PROTECT, default=1)
@@ -85,11 +84,3 @@ class CustomUser(AbstractBaseUser):
 		self.study_year = POST.get('study_year')
 		self.hangout_spot = POST.get('hangout_spot')
 		self.save()
-	
-	def getTarget(self):
-		target_user = CustomUser.objects.get(id=self.target_id)
-		while target_user.user_eliminated == 2:
-			self.target_id = target_user.target_id
-			self.save()
-			target_user = CustomUser.objects.get(id=self.target_id)
-		return target_user

@@ -26,10 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 
 
 {% block content %}
+{% if request.user.target %}
 <div class="row-fluid">
 	<div class="col-md-6">
 		{% if request.user.money_raised > 15 %}
-		<img id="picture" src="/media/{{target.profile_photo}}" alt ="Your target's photo">
+		<img id="picture" src="/media/{{request.user.target.profile_photo}}" alt ="Your target's photo">
 		{% else %}
 		<progress value={{request.user.money_raised}} max=15.00 ></progress>
 		{% endif %}
@@ -39,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label"> Name: </div>
 				{% if request.user.money_raised > 30 %}
-				<div class="col-md-8"> {{target.full_name}} </div>
+				<div class="col-md-8"> {{request.user.target.full_name}} </div>
 				{% else %}
 				<progress value={{request.user.money_raised}} max=30.00 ></progress>
 				{% endif %}
@@ -47,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label" > Program: </div>
 				{% if request.user.money_raised > 45 %}
-				<div class="col-md-8"> {{target.study_program}} </div>
+				<div class="col-md-8"> {{request.user.target.study_program}} </div>
 				{% else %}
 				<progress value={{request.user.money_raised}} max=45.00 ></progress>
 				{% endif %}
@@ -55,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label"> Year: </div>
 				{% if request.user.money_raised > 60 %}
-				<div class="col-md-8"> {{target.study_year}} </div>
+				<div class="col-md-8"> {{request.user.target.study_year}} </div>
 				{% else %}
 				<progress value={{request.user.money_raised}} max=60.00 ></progress>
 				{% endif %}
@@ -63,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 			<div class="row-fluid clearfix">
 				<div class="col-md-4 info-label"> Hangout Spot: </div>
 				{% if request.user.money_raised > 75 %}
-				<div class="col-md-8"> {{target.hangout_spot}} </div>
+				<div class="col-md-8"> {{request.user.target.hangout_spot}} </div>
 				{% else %}
 				<progress value={{request.user.money_raised}} max=75.00 ></progress>
 				{% endif %}
@@ -83,7 +84,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 		</div>
 	</div>
 </div>
-{% if target.user_eliminated == -1 %}
+{% if request.user.target.user_eliminated == -1 %}
 <div id="Modal" class="modal fade" role="dialog" style="top:45%">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -100,8 +101,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
     </div>
   </div>
 </div>
-{% endif %}
-{% if target.user_eliminated == 1 %}
+{% elif request.user.target.user_eliminated == 1 %}
 <div id="Modal" class="modal fade" role="dialog" style="top:45%">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -120,7 +120,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
   </div>
 </div>
 {% endif %}
-{% if caught %}
+{% elif caught %}
 <div id="Modal" class="modal fade" role="dialog" style="top:45%">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -138,6 +138,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/> -->
 
   </div>
 </div>
+{% elif not game_started %}
+<p>The game hasn't started, please come back soon</p>
+{% else %}
+<p>Please wait to receive a target</p>
 {% endif %}
 {% endblock %}
 
