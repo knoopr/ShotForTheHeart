@@ -197,6 +197,7 @@ def target(request):
 	if request.method == 'POST':
 		request.user.target.user_eliminated = 1
 		request.user.target.save()
+		request.user.participating_game.getTarget(request.user)
 		return HttpResponseRedirect("/target")
 
 
